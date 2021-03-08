@@ -13,7 +13,7 @@ class Tournament:
         self.t_round_info = []
 
     def tournament_players(self, t_player_info):
-        # List that store the info of all 8 players in the tournment; player tuple = (name + score)
+        # List that store the info of all 8 players in the tournament
         self.t_player_info = t_player_info
 
     def matchs_speed(self, speed):
@@ -22,9 +22,7 @@ class Tournament:
             raise ValueError("results: speed must be bullet, blitz or swift")
 
     def description(self, to_notes):
-        if isinstance(to_notes, (str)):
-            self.to_notes = to_notes
-        # need an ELSE here
+        self.to_notes = to_notes
 
 
 class Player:
@@ -38,4 +36,21 @@ class Player:
     def rank(self, rank):
         if isinstance(rank, int):
             self.rank = rank
-        # need an ELSE here too
+        else:
+            print("A rank must be an integer")
+
+
+class Round:
+
+    def __init__(self, match_list):
+        # a round is a list of matchs
+        self.match_list = []
+
+# i probably can get way with using a single class for match & round
+
+
+class Match:
+
+    def __init__(self, tplayer1, tplayer2, tscore1, tscore2):
+        match_results = ([self.tplayer1, self.score1], [self.tplayer2, self.tscore2])
+        return match_results
