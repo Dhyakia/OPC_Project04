@@ -1,1 +1,0 @@
-# This part fetch raw data and feed it to the controller
