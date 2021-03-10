@@ -1,4 +1,4 @@
-import model as md
+import view
 
 if __name__ == "__main__":
-    # beep boop
+    view.welcome()

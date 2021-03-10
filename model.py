@@ -3,8 +3,8 @@ class Tournament:
     def __init__(self, name, location, date, duration=1, number_of_turns=4):
         self.name = name
         self.location = location
-        # can go over 1 day, think about it
         self.date = date
+        # can go over 1 day, think about it
         self.duration = duration
         self.number_of_turns = number_of_turns
 
@@ -14,7 +14,7 @@ class Tournament:
 
     def tournament_players(self, t_player_info):
         # List that store the info of all 8 players in the tournament
-        self.t_player_info = t_player_info
+        self.t_player_info = []
 
     def matchs_speed(self, speed):
         valid_speed = {"bullet", "blitz", "swift"}
@@ -45,8 +45,6 @@ class Round:
     def __init__(self, match_list):
         # a round is a list of matchs
         self.match_list = []
-
-# i probably can get way with using a single class for match & round
 
 
 class Match:
