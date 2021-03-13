@@ -1,54 +1,53 @@
 class Tournament:
 
-    def __init__(self, name, location, date, duration=1, number_of_turns=4):
+    def __init__(self, name, location, date, duration=1, number_of_turns=4, speed='', tournament_infos=''):
         self.name = name
+        print(f"Tournament's name is : {self.name}")
+
         self.location = location
+        print(f"Tournament's location is : {self.location}")
+
         self.date = date
-        # can go over 1 day, think about it
+        print(f"Tournament's take place the : {self.date}")
+
         self.duration = duration
+        print(f"Tournament will take place over {self.duration} days")
+
         self.number_of_turns = number_of_turns
+        print(f"Their will be : {self.number_of_turns} rounds")
 
-    def tournament_rounds(self, t_round_info):
-        # List that store the info of each round (1 round = 4 matchs)
-        self.t_round_info = []
+        self.speed = speed
+        possible_speed = ["bullet", "blitz", "swift play"]
+        if speed.lower() in possible_speed:
+            print(f"The format is {self.speed}")
+        else:
+            print("Speed must be 'bullet', 'blitz' or 'swift play'")
 
-    def tournament_players(self, t_player_info):
-        # List that store the info of all 8 players in the tournament
-        self.t_player_info = []
+        self.tournament_infos = tournament_infos
+        print(f"Tournament's info : {self.tournament_infos}")
 
-    def matchs_speed(self, speed):
-        valid_speed = {"bullet", "blitz", "swift"}
-        if speed not in valid_speed:
-            raise ValueError("results: speed must be bullet, blitz or swift")
+    def turns_list(self):
+        # store turns info into a list
+        pass
 
-    def description(self, to_notes):
-        self.to_notes = to_notes
+    def players_list(self):
+        # store players info into a list
+        pass
 
 
 class Player:
 
-    def __init__(self, last_name, first_name, date_of_birth, gender):
+    def __init__(self, last_name, first_name, date_of_birth, gender, elo):
         self.last_name = last_name
         self.first_name = first_name
         self.date_of_birth = date_of_birth
         self.gender = gender
 
-    def rank(self, rank):
-        if isinstance(rank, int):
-            self.rank = rank
+        if type(elo) == int:
+            if elo > 0:
+                self.elo = elo
+                print(self.elo)
+            else:
+                print('The elo must be positive')
         else:
-            print("A rank must be an integer")
-
-
-class Round:
-
-    def __init__(self, match_list):
-        # a round is a list of matchs
-        self.match_list = []
-
-
-class Match:
-
-    def __init__(self, tplayer1, tplayer2, tscore1, tscore2):
-        match_results = ([self.tplayer1, self.score1], [self.tplayer2, self.tscore2])
-        return match_results
+            print('The elo must be a integer')
