@@ -2,37 +2,22 @@ class Tournament:
 
     def __init__(self, name, location, date, duration=1, number_of_turns=4, speed='', tournament_infos=''):
         self.name = name
-        print(f"Tournament's name is : {self.name}")
-
         self.location = location
-        print(f"Tournament's location is : {self.location}")
-
         self.date = date
-        print(f"Tournament's take place the : {self.date}")
-
         self.duration = duration
-        print(f"Tournament will take place over {self.duration} days")
-
         self.number_of_turns = number_of_turns
-        print(f"Their will be : {self.number_of_turns} rounds")
 
-        self.speed = speed
         possible_speed = ["bullet", "blitz", "swift play"]
         if speed.lower() in possible_speed:
-            print(f"The format is {self.speed}")
+            self.speed = speed
         else:
             print("Speed must be 'bullet', 'blitz' or 'swift play'")
 
         self.tournament_infos = tournament_infos
-        print(f"Tournament's info : {self.tournament_infos}")
 
-    def turns_list(self):
-        # store turns info into a list
-        pass
+        # Rounds - List that store the info at the end of the round
 
-    def players_list(self):
-        # store players info into a list
-        pass
+        # Tournament players - List that store the info of players in the tournament
 
 
 class Player:
@@ -43,11 +28,26 @@ class Player:
         self.date_of_birth = date_of_birth
         self.gender = gender
 
-        if type(elo) == int:
+        if type(elo) == float:
             if elo > 0:
                 self.elo = elo
-                print(self.elo)
             else:
                 print('The elo must be positive')
         else:
-            print('The elo must be a integer')
+            print('The elo must be a number')
+
+
+class Tournament_player:
+
+    def __init__(self, Player):
+        self.name = (Player.first_name + ' ' + Player.last_name)
+        self.score = float(0)
+
+    def Win():
+        #
+
+    def Loose():
+        #
+
+    def Draw():
+        #
