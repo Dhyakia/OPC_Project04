@@ -15,9 +15,9 @@ class Tournament:
 
         self.tournament_infos = tournament_infos
 
-        # Rounds - List that store the info at the end of the round
+    # List of all the rounds
 
-        # Tournament players - List that store the info of players in the tournament
+    # List of players in the tournament
 
 
 class Player:
@@ -35,19 +35,3 @@ class Player:
                 print('The elo must be positive')
         else:
             print('The elo must be a number')
-
-
-class Tournament_player:
-
-    def __init__(self, Player):
-        self.name = (Player.first_name + ' ' + Player.last_name)
-        self.score = float(0)
-
-    def Win():
-        #
-
-    def Loose():
-        #
-
-    def Draw():
-        #
