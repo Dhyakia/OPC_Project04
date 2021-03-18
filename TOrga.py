@@ -1,5 +1,10 @@
-import view
 import controller
 
+
+def start_program():
+    start = controller.Controller()
+    return start
+
+
 if __name__ == "__main__":
-    # beep boop
+    start_program()
