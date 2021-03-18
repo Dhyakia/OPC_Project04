@@ -1,5 +1,7 @@
 class Tournament:
 
+    number_of_tournament_player = []
+
     def __init__(self, name, location, date, duration=1, number_of_turns=4, speed='', tournament_infos=''):
         self.name = name
         self.location = location
@@ -11,9 +13,8 @@ class Tournament:
         if speed.lower() in possible_speed:
             self.speed = speed
         else:
-            print("Speed must be 'bullet', 'blitz' or 'swift play'")
-
-        self.tournament_infos = tournament_infos
+            # It works but CRASH the program if input is incorrect
+            raise Exception("Speed param must be 'bullet', 'blitz' or 'swift play'")
 
     # List of all the rounds
 
@@ -32,6 +33,7 @@ class Player:
             if elo > 0:
                 self.elo = elo
             else:
-                print('The elo must be positive')
+                # Same problem as other Execption -> it crash the program
+                raise Exception('The elo must be positive')
         else:
-            print('The elo must be a number')
+            raise Exception('The elo must be a number')
