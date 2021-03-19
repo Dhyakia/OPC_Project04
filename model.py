@@ -53,6 +53,7 @@ class Rounds():
 
 
 # "database" for testing until TinyDB is setup
+"""
 player_01 = Player("Rimonteil", "Antoine", "01.08.1889", "Male", 1200.0)
 player_02 = Player("Rakkas", "Thomas", "06.12.1983", "Male", 1500.0)
 player_03 = Player("Martin", "Isabelle", "21.08.1783", "Female", 800.5)
@@ -74,3 +75,4 @@ tplayer_08 = Tournament_player(player_08)
 test_tournament = Tournament(name="Tiny Chess Tournament", location="City's chess club", date="24.06.2022",
                              duration=1, number_of_turns=4, speed="blitz",
                              tournament_infos="Veteran & new player are welcome")
+"""

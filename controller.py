@@ -1,9 +1,10 @@
-
+import model
+import view
 
 class Controller():
 
     def __init__(self):
-        print("TOrga has started")
+        pass
 
     def first_round_match_generator(player_rank_list):
         players_rankings_ordered = sorted(player_rank_list, reverse=True)
@@ -17,3 +18,5 @@ class Controller():
         first_turn_match_4 = [top_half_ranking_players[3], bottom_half_ranking_players[3]]
 
         return first_turn_match_1, first_turn_match_2, first_turn_match_3, first_turn_match_4
+    
+    # back the exercices.
