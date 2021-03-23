@@ -3,12 +3,10 @@ class View:
     def __init__():
         pass
 
-    # Main related
     def ask_main_menu():
         logic_start = input("Do you want to create a [T]ournament or [A]dd a new player ?\n")
         return logic_start
 
-    # Tournament related
     def ask_tournament_name():
         tournament_name_input = input("Enter the name: ")
         return tournament_name_input
@@ -18,7 +16,7 @@ class View:
         return tournament_location_input
 
     def ask_tournament_date():
-        tournament_date_input = input("Enter the date: ")
+        tournament_date_input = input("Enter the date in DD.MM.YYYY format: ")
         return tournament_date_input
 
     def ask_tournament_duration():
@@ -40,7 +38,6 @@ class View:
         tournament_info_input = input("TO remark's: ")
         return tournament_info_input
 
-    # Player related
     def ask_player_last_name():
         player_last_name_input = input("Enter last name: ")
         return player_last_name_input
@@ -50,7 +47,7 @@ class View:
         return player_first_name_input
 
     def ask_player_date_of_birth():
-        player_date_of_birth_input = input("Enter birthdate: ")
+        player_date_of_birth_input = input("Enter birthdate in DD.MM.YYYY format: ")
         return player_date_of_birth_input
 
     def ask_player_gender():
@@ -58,8 +55,12 @@ class View:
         return player_gender_input
 
     def ask_player_elo():
-        player_elo_input = input("Enter elo: ")
+        player_elo_input = float(input("Enter elo: "))
         return player_elo_input
 
     def elo_help():
         print("The value of the elo must be a float")
+
+    def ask_player_from_tplayer():
+        player_from_tplayer_input = input("Enter a player last name and first name: ")
+        return player_from_tplayer_input

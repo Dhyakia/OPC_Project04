@@ -2,12 +2,10 @@
 
 class Tournament:
 
-    TPLAYER_COUNTER = 0
-    ROUND_COUNTER = 0
+    PLAYER_LIST = []
     TPLAYER_LIST = []
-    ROUND_LIST = []
 
-    def __init__(self, name="", location="", date="", duration=1, number_of_turns=4, speed="", tournament_info=""):
+    def __init__(self, name, location, date, duration=1, number_of_turns=4, speed="", tournament_info=""):
         self.name = name
         self.location = location
         self.date = date
@@ -54,4 +52,15 @@ class Tournament_player():
         # a tournament player is a LIST composed of a name + score
         self.name = (player.last_name + ' ' + player.first_name)
         self.score = float(0)
-        Tournament.TPLAYER_ENTRY_COUNTER + 1
+
+
+# TEST ; Fake "database" for testing
+# TEST ; added 8 dummy
+RimAnt = Player('Rimonteil', 'Antoine', '08.01.1689', 'male', 1200.0)
+RimTho = Player('Rimonteil', 'Thomas', '06.12.1990,', 'male', 1500.0)
+BonCap = Player('Bontet', 'Capucine', '08.16.2017', 'female', 800.0)
+MarMar = Player('Mark', 'Marky', '21.01.1960', 'male', 2200.5)
+NguDen = Player('Nguyen', 'Denis', '18.06.1993', 'male', 2500.0)
+MarIsa = Player('Martin', 'Isabelle', '14.07.1950', 'female', 3300.0)
+JesLaf = Player('Jessica', 'Laforet', '01.02.2021', 'female', 100.0)
+GoyAns = Player('Goyal', 'Anshul', '15.08.1970', 'male', 1800.5)
