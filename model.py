@@ -2,9 +2,6 @@
 
 class Tournament:
 
-    PLAYER_LIST = []
-    TPLAYER_LIST = []
-
     def __init__(self, name, location, date, duration=1, number_of_turns=4, speed="", tournament_info=""):
         self.name = name
         self.location = location
@@ -28,7 +25,6 @@ class Player:
 class Round():
 
     def __init__(self, name, match_1, match_2, match_3, match_4, date_of_start):
-        # A round a LIST composed of 4 matchs
         self.name = name
         self.match_1 = match_1
         self.match_2 = match_2
@@ -39,7 +35,6 @@ class Round():
 class Match():
 
     def __init__(self, tplayer_1, tplayer_score_1, tplayer_2, tplayer_score_2):
-        # a match a TUPLE composed of 2 tournament_player
         self.tplayer_1 = tplayer_1
         self.tplayer_2 = tplayer_2
         self.tplayer_score_1 = tplayer_score_1
@@ -49,7 +44,6 @@ class Match():
 class Tournament_player():
 
     def __init__(self, player):
-        # a tournament player is a LIST composed of a name + score
         self.name = (player.last_name + ' ' + player.first_name)
         self.score = float(0)
 

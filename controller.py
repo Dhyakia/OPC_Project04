@@ -10,7 +10,7 @@ class Controller:
         Controller.main_menu()
 
     def main_menu():
-        # TODO low-prio; start tournament / add player / show multiples lists / save+load?
+        # TODO: start tournament / add player / show multiples lists / save+load?
         start_logic = vv.View.ask_main_menu()
         if start_logic.lower() == "t":
             Controller.new_tournament()
@@ -21,8 +21,8 @@ class Controller:
 
     def new_tournament():
 
-        Controller.get_new_tournament_data()    # TEST ; skip for testing
-        # Controller.get_8_player()             # TODO ; on it
+        # Controller.get_new_tournament_data()  # TEST ; skip for testing
+        Controller.get_8_player()               # TODO ; on it
         # Generate first matchs                 # TODO
         # Enter score                           # TODO
         # Generate next to last matchs          # TODO
@@ -55,7 +55,7 @@ class Controller:
         return print(new_tournament_data)
 
     def get_8_player():
-        # first i need to change how i get player
+        # TODO: i first need to change how i store and recall player
         pass
 
     def add_player():
@@ -69,16 +69,19 @@ class Controller:
         player_gender = vv.View.ask_player_gender()
 
         player_elo = vv.View.ask_player_elo()
-        while type(player_elo) is not float:  # TODO low-prio; loop never activate, crash if not float
+        # TODO low-prio; loop never activate, crash if not float
+        while type(player_elo) is not float:
             player_elo = vv.View.ask_player_elo()
 
-        # new_player name varible should be = 3first letter of last name + 3first letter of first name
         new_player = model.Player(player_last_name, player_first_name, player_date_of_birth,
                                   player_gender, player_elo)
 
-        # TODO high-prio; i think i need to use a dictionnary to get a key of the newly created player
+        # TODO high-prio; i think i need to use a dictionnary to get a key of the newly created player 
+        # create dictionary in model
+        # 
 
-        return new_player, Controller.main_menu()  # TODO ask-mentor; if that's the right way
+        # TODO ask-mentor; if that's the right way
+        return new_player, Controller.main_menu()
 
     def get_time():
         now = datetime.now()
