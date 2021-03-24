@@ -33,10 +33,8 @@ class Controller:
         tournament_location = vv.View.ask_tournament_location()
 
         tournament_date = vv.View.ask_tournament_date()
-        # TODO low-prio; work but crash if format is wrong
-        # Ask mentor ? i don't know why it doesn't work anymore
         day, month, year = map(int, tournament_date.split('.'))
-        tournament_date = datetime.date(day, month, year)
+        tournament_date = datetime.date(year, month, day)
 
         tournament_duration = vv.View.ask_tournament_duration()
         tournament_number_of_turns = vv.View.ask_tournament_number_of_turns()
@@ -64,12 +62,9 @@ class Controller:
         player_last_name = vv.View.ask_player_last_name()
         player_first_name = vv.View.ask_player_first_name()
 
-        player_date_of_birth = vv.View.ask_player_date_of_birth()
-        # TODO low-prio; work but crash if format is wrong
-        """
-        day, month, year = map(int, player_date_of_birth.split('.'))
-        player_date_of_birth = datetime.date(day, month, year)
-        """
+        player_date_of_birth_data = vv.View.ask_player_date_of_birth()
+        day, month, year = map(int, player_date_of_birth_data.split('.'))
+        player_date_of_birth = datetime.date(year, month, day)
 
         player_gender = vv.View.ask_player_gender()
 
