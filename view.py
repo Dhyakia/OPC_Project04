@@ -1,7 +1,13 @@
+# Because all methods ( as of 25.03.2021 ) are statics, it might not be needed to create a clas
+
+
 class View:
 
-    def __init__():
-        pass
+    def __init__(self):
+        print("Welcome to torga")
+
+    def goodbye():
+        print("Goodbye !")
 
     def ask_main_menu():
         logic_start = input("Do you want to create a [T]ournament or [A]dd a new player ?\n")
@@ -16,8 +22,11 @@ class View:
         return tournament_location_input
 
     def ask_tournament_date():
-        tournament_date_input = input("Enter the date in DD.MM.YYYY format: ")
+        tournament_date_input = input("Enter the date in YYYY-MM-DD format: ")
         return tournament_date_input
+
+    def ask_tournament_date_help():
+        print("You must follow the YYYY-MM-DD format")
 
     def ask_tournament_duration():
         tournament_duration_input = input("[Default is: 1 day] Enter the duration : ")
@@ -31,7 +40,7 @@ class View:
         tournament_speed_input = input("Enter the speed format: ")
         return tournament_speed_input
 
-    def speed_help():
+    def ask_tournament_speed_help():
         print("Speed format must be 'bullet', blitz' or 'swift play'")
 
     def ask_tournament_info():
@@ -47,20 +56,19 @@ class View:
         return player_first_name_input
 
     def ask_player_date_of_birth():
-        player_date_of_birth_input = input("Enter birthdate in DD.MM.YYYY format: ")
+        player_date_of_birth_input = input("Enter birthdate in YYYY-MM-DD format: ")
         return player_date_of_birth_input
+
+    def ask_player_date_of_birth_help():
+        print("You must follow the YYYY-MM-DD format")
 
     def ask_player_gender():
         player_gender_input = input("Enter gender: ")
         return player_gender_input
 
     def ask_player_elo():
-        player_elo_input = float(input("Enter elo: "))
+        player_elo_input = input("Enter elo: ")
         return player_elo_input
 
-    def elo_help():
+    def ask_player_elo_help():
         print("The value of the elo must be a float")
-
-    def ask_player_from_tplayer():
-        player_from_tplayer_input = input("Enter a player last name and first name: ")
-        return player_from_tplayer_input
