@@ -1,11 +1,13 @@
 class Player:
 
     def __init__(self, last_name, first_name, date_of_birth, gender, elo):
+        # explicit
         self.last_name = last_name
         self.first_name = first_name
         self.date_of_birth = date_of_birth
         self.gender = gender
         self.elo = elo
+        # implicit
         self.score = float(0)
 
 
@@ -14,6 +16,7 @@ class Tournament:
     CONSTANT_NUMBER_OF_TOURNAMENT_PLAYER = 8
 
     def __init__(self, name, location, date, duration=1, number_of_turns=4, speed="", tournament_info=""):
+        # explicit
         self.name = name
         self.location = location
         self.date = date
@@ -21,25 +24,9 @@ class Tournament:
         self.number_of_turns = number_of_turns
         self.speed = speed
         self.tournament_info = tournament_info
-
-
-class Round():
-
-    def __init__(self, name, match_1, match_2, match_3, match_4, date_of_start):
-        self.name = name
-        self.match_1 = match_1
-        self.match_2 = match_2
-        self.match_3 = match_3
-        self.match_4 = match_4
-
-
-class Match():
-
-    def __init__(self, tplayer_1, tplayer_score_1, tplayer_2, tplayer_score_2):
-        self.tplayer_1 = tplayer_1
-        self.tplayer_2 = tplayer_2
-        self.tplayer_score_1 = tplayer_score_1
-        self.tplayer_score_2 = tplayer_score_2
+        # implicit
+        self.player_list = []
+        self.roundds_list = []
 
 
 # "DATEBASE"

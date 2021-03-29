@@ -1,4 +1,4 @@
-# Because all methods ( as of 25.03.2021 ) are statics, it might not be needed to create a clas
+# Because all methods ( as of 25.03.2021 ) are statics, it might not be needed to create a class
 
 
 class View:
@@ -72,3 +72,18 @@ class View:
 
     def ask_player_elo_help():
         print("The value of the elo must be a float")
+
+    def ask_player_full_name():
+        player_full_name = input("Enter the full name of the participant: ")
+        return player_full_name
+
+    def ask_player_full_name_help():
+        print("The format must be 'Lastname Firstname'")
+
+    def player_has_been_added(player_name):
+        print(f"{player_name} has succesfully been added into the tournament.")
+
+    # Unused ATM
+    def player_has_been_added_help(player_name):
+        print(f"{player_name} couldn't be found.")
+        print("Either not in the database, or not in the right format. Try 'Lastname Firstname'.")

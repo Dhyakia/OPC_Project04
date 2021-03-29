@@ -11,6 +11,7 @@ class Controller:
 
     @classmethod
     def main(cls):
+        cls.get_8_players()
         start_logic = vv.View.ask_main_menu()
         if start_logic.lower() == "t":
             cls.get_new_tournament_data()
@@ -45,7 +46,7 @@ class Controller:
 
         possible_speed = ["bullet", "blitz", "swift play"]
         tournament_speed = vv.View.ask_tournament_speed()
-        while tournament_speed not in possible_speed:
+        while tournament_speed.low() not in possible_speed:
             vv.View.ask_tournament_speed_help()
             tournament_speed = vv.View.ask_tournament_speed()
 
@@ -59,12 +60,22 @@ class Controller:
 
     @classmethod
     def get_8_players(cls):
-        # ask user wich player to enter into the tournament [last_name + " " + first_name]
-        # search the list for the player in question
-        # in a while loop, using the constant in tournament(8) to loop:
-        # if player exist = add him into the list and continue until 8 player
-        # else, either the player doesn't exist or typo, warn user
-        pass
+        # TODO; fix "not enought value to unpack" when user input isn't at least 2 values
+        # TODO; I add the name into the list, not the actual player !
+        while len(model.tournament_list[-1].player_list) < 8:
+            player_entering_tournament = vv.View.ask_player_full_name()
+            player_last_name, player_first_name = player_entering_tournament.split(" ")
+            for namus in model.player_list:
+                # TODO; ask mentor about that one; "postpone inevitable - index out of range"
+                # I think it's ok as a temporary solution until the db is setup
+                if namus.last_name == player_last_name and namus.first_name == player_first_name:
+                    model.tournament_list[-1].player_list.append(player_entering_tournament)
+                    print(model.tournament_list[-1].player_list)
+                    vv.View.player_has_been_added(player_entering_tournament)
+                else:
+                    # TODO; Error message appear every time the for loop = need another way
+                    pass
+        print("Sucessfully added 8 players, the tournament can now start")
 
     @classmethod
     def add_player(cls):
@@ -101,6 +112,6 @@ class Controller:
 
     @staticmethod
     def get_time():
-        # TODO; will have to check if that's the right way
-        now = datetime.now()
-        return now
+        now = datetime.datetime.now()
+        full_now = now.strftime("%d/%m/%Y %H:%M:%S")
+        return full_now
