@@ -86,3 +86,9 @@ class View:
 
     def tournament_can_start():
         print("Sucessfully added 8 players, the tournament can now start")
+
+    def generating_first_turn_pair():
+        print('generating first turn matchs ...')
+
+    def show_user_matchup(match):
+        print(f'{match[0].first_name} {match[0].last_name} VS {match[1].last_name} {match[1].first_name}')
