@@ -11,7 +11,8 @@ class Controller:
 
     @classmethod
     def main(cls):
-        cls.get_8_players()
+        # START TEST
+        # END TEST
         start_logic = vv.View.ask_main_menu()
         if start_logic.lower() == "t":
             cls.get_new_tournament_data()
@@ -60,22 +61,23 @@ class Controller:
 
     @classmethod
     def get_8_players(cls):
-        # TODO; fix "not enought value to unpack" when user input isn't at least 2 values
-        # TODO; I add the name into the list, not the actual player !
+        # TODO; ask mentor about that one; "postpone inevitable - index out of range"
+        # I think it's ok as a temporary solution until the db is setup
         while len(model.tournament_list[-1].player_list) < 8:
             player_entering_tournament = vv.View.ask_player_full_name()
             player_last_name, player_first_name = player_entering_tournament.split(" ")
-            for namus in model.player_list:
-                # TODO; ask mentor about that one; "postpone inevitable - index out of range"
-                # I think it's ok as a temporary solution until the db is setup
-                if namus.last_name == player_last_name and namus.first_name == player_first_name:
-                    model.tournament_list[-1].player_list.append(player_entering_tournament)
-                    print(model.tournament_list[-1].player_list)
-                    vv.View.player_has_been_added(player_entering_tournament)
+            error_message_counter = []
+            for index, name in enumerate(model.player_list):
+                if name.last_name == player_last_name and name.first_name == player_first_name:
+                    model.tournament_list[-1].player_list.append(model.player_list[index])
                 else:
-                    # TODO; Error message appear every time the for loop = need another way
-                    pass
-        print("Sucessfully added 8 players, the tournament can now start")
+                    error_message_counter.append("x")
+                    if len(error_message_counter) == len(model.player_list):
+                        vv.View.player_has_been_added_help(player_entering_tournament)
+                    else:
+                        pass
+
+        vv.View.tournament_can_start()
 
     @classmethod
     def add_player(cls):
