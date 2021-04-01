@@ -25,7 +25,7 @@ class Tournament:
         self.speed = speed
         self.tournament_info = tournament_info
         # implicit
-        self.player_list = []
+        self.players_list = []
         self.rounds_list = []
 
 
@@ -38,16 +38,23 @@ player_05 = Player('Nguyen', 'Denis', '1993-06-18', 'male', 2500.0)
 player_06 = Player('Martin', 'Isabelle', '1950.07-14', 'female', 3300.0)
 player_07 = Player('Laforet', 'Jessica', '2021-02-01', 'female', 100.0)
 player_08 = Player('Goyal', 'Anshul', '1970-08-15', 'male', 1800.5)
-player_09 = Player('Moya', 'Silvany', '1989-02-02', 'female', 1750.5)
-player_10 = Player('Martin', 'Hugo', '1223-12-24', 'male', 1500.0)
 
-player_list = [player_01, player_02, player_03, player_04, player_05,
-               player_06, player_07, player_08, player_09, player_10]
+players_list = [player_01, player_02, player_03, player_04, player_05,
+                player_06, player_07, player_08]
 
 tournament_01 = Tournament("First tournament", "City's chess club", "2020-12-25", 1, 4, "blitz", "Merry Xmass")
 tournament_02 = Tournament("New year opening", "City's chess club", "2021-01-08", 2, 6, "bullet", "Happy new year")
 tournament_03 = Tournament("Easter special", "City's chess club", "2021-04-01", 1, 4, "blitz", "Free pizza")
 
-tournament_list = [tournament_01, tournament_02, tournament_03]
+tournaments_list = [tournament_01, tournament_02, tournament_03]
 
-tournament_03.player_list = [player_01, player_02, player_03, player_04, player_05, player_06, player_07, player_08]
+tournament_03.players_list = [player_01, player_02, player_03, player_04, player_05, player_06, player_07, player_08]
+
+tournament_03.players_list[0].score = 4
+tournament_03.players_list[1].score = 3.5
+tournament_03.players_list[2].score = 2
+tournament_03.players_list[3].score = 0
+tournament_03.players_list[4].score = 0.5
+tournament_03.players_list[5].score = 2.5
+tournament_03.players_list[6].score = 2.5
+tournament_03.players_list[7].score = 1

@@ -9,26 +9,22 @@ class Controller:
         vv.View()
         self.main()
 
-    @classmethod
-    def main(cls):
+    def main(self):
         # START TEST
-        cls.first_round_generator()
         # END TEST
         start_logic = vv.View.ask_main_menu()
         if start_logic.lower() == "t":
-            cls.get_new_tournament_data()
-            cls.get_8_players()
-            # Generate fist match
-            # Enter score
-            # Generate next to last matchs
-            # Tournament over, show end results
+            self.get_new_tournament_data()
+            self.get_8_players()
+            self.first_round_generator()
+            self.second_to_last_round_generator()
+            self.enter_score()
         elif start_logic.lower() == "a":
-            cls.add_player()
+            self.add_player()
         else:
             vv.View.goodbye()
 
-    @classmethod
-    def get_new_tournament_data(cls):
+    def get_new_tournament_data(self):
         tournament_name = vv.View.ask_tournament_name()
         tournament_location = vv.View.ask_tournament_location()
 
@@ -48,7 +44,7 @@ class Controller:
 
         possible_speed = ["bullet", "blitz", "swift play"]
         tournament_speed = vv.View.ask_tournament_speed()
-        while tournament_speed.low() not in possible_speed:
+        while tournament_speed.lower() not in possible_speed:
             vv.View.ask_tournament_speed_help()
             tournament_speed = vv.View.ask_tournament_speed()
 
@@ -58,58 +54,106 @@ class Controller:
                                                tournament_duration, tournament_number_of_turns, tournament_speed,
                                                tournament_info)
 
-        model.tournament_list.append(new_tournament_data)
+        model.tournaments_list.append(new_tournament_data)
 
-    @classmethod
-    def get_8_players(cls):
-        # TODO; ask mentor about that one; "postpone inevitable - index out of range"
-        # I think it's ok as a temporary solution until the db is setup
-        while len(model.tournament_list[-1].player_list) < model.CONSTANT_NUMBER_OF_TOURNAMENT_PLAYER:
+    # crash if there's to few value input
+    def get_8_players(self):
+        while len(model.tournaments_list[-1].players_list) < model.Tournament.CONSTANT_NUMBER_OF_TOURNAMENT_PLAYER:
             player_entering_tournament = vv.View.ask_player_full_name()
             player_last_name, player_first_name = player_entering_tournament.split(" ")
             error_message_counter = []
-            for index, name in enumerate(model.player_list):
+            for index, name in enumerate(model.players_list):
                 if name.last_name == player_last_name and name.first_name == player_first_name:
-                    model.tournament_list[-1].player_list.append(model.player_list[index])
+                    model.tournaments_list[-1].players_list.append(model.players_list[index])
+                    vv.View.player_has_been_added(player_entering_tournament)
                 else:
                     error_message_counter.append("x")
-                    if len(error_message_counter) == len(model.player_list):
+                    if len(error_message_counter) == len(model.players_list):
                         vv.View.player_has_been_added_help(player_entering_tournament)
                     else:
                         pass
 
         vv.View.tournament_can_start()
 
-    @classmethod
-    def first_round_generator(cls):
-        # rules :
-        vv.View.generating_first_turn_pair()
-        # 1. Order players by elo
-        player_list_by_elo = sorted(model.tournament_list[-1].player_list, key=lambda x: x.elo, reverse=True)
-        # 2. Create 2 list, top half and bottom half
-        middle = len(player_list_by_elo)//2
-        top_half_players = player_list_by_elo[:middle]
-        bottom_half_players = player_list_by_elo[middle:]
-        # 3. Match player by pos -> top_half[0] and bottom_half[0], etc
+    def first_round_generator(self):
+        vv.View.generating_first_turn_matchs()
+        players_list_by_elo = sorted(model.tournaments_list[-1].players_list, key=lambda x: x.elo, reverse=True)
+
+        middle = len(players_list_by_elo)//2
+        top_half_players = players_list_by_elo[:middle]
+        bottom_half_players = players_list_by_elo[middle:]
+
         match_01 = top_half_players[0], bottom_half_players[0]
         match_02 = top_half_players[1], bottom_half_players[1]
         match_03 = top_half_players[2], bottom_half_players[2]
         match_04 = top_half_players[3], bottom_half_players[3]
-        # 4. When all 4 matchs are generated, its the start of the first round
-        round_01 = [match_01, match_02, match_03, match_04]
-        model.tournament_list[-1].rounds_list.append(round_01)
-        # 5. Show the matchs to the user
+
+        round = [match_01, match_02, match_03, match_04]
+        model.tournaments_list[-1].rounds_list.append(round)
+
+        vv.View.show_user_matchup(match_01, match_02, match_03, match_04)
+
+    def second_to_last_round_generator(self):
+        vv.View.generating_matchs()
+        players_list_by_score = sorted(model.tournaments_list[-1].players_list, key=lambda x: x.score, reverse=True)
+
+        match_01 = players_list_by_score[0], players_list_by_score[1]
+        match_02 = players_list_by_score[2], players_list_by_score[3]
+        match_03 = players_list_by_score[4], players_list_by_score[5]
+        match_04 = players_list_by_score[6], players_list_by_score[7]
+
+        # TODO; if the player n°1 already played vs the n°2, then play vs n°3
+
+        round = [match_01, match_02, match_03, match_04]
+        model.tournaments_list[-1].rounds_list.append(round)
+
         vv.View.show_user_matchup(match_01)
         vv.View.show_user_matchup(match_02)
         vv.View.show_user_matchup(match_03)
         vv.View.show_user_matchup(match_04)
 
-    @classmethod
-    def second_to_last_round_generator():
-        pass
+    def enter_score(cls):
+        vv.View.enter_score_instructions()
+        match_count = 0
 
-    @classmethod
-    def add_player(cls):
+        while match_count < 4:
+            match_result = vv.View.ask_user_match_result((match_count + 1))
+            if match_result == "0":
+                player_1_last_name = model.tournaments_list[-1].rounds_list[-1][match_count][0].last_name
+                player_1_first_name = model.tournaments_list[-1].rounds_list[-1][match_count][0].first_name
+                player_2_last_name = model.tournaments_list[-1].rounds_list[-1][match_count][1].last_name
+                player_2_first_name = model.tournaments_list[-1].rounds_list[-1][match_count][1].first_name
+                for index, name in enumerate(model.tournaments_list[-1].players_list):
+                    if name.last_name == player_1_last_name and name.first_name == player_1_first_name:
+                        model.tournaments_list[-1].players_list[index].score += 0.5
+                    elif name.last_name == player_2_last_name and name.first_name == player_2_first_name:
+                        model.tournaments_list[-1].players_list[index].score += 0.5
+                        match_count += 1
+                        vv.View.draw(match_count)
+
+            elif match_result == "1":
+                last_name = model.tournaments_list[-1].rounds_list[-1][match_count][0].last_name
+                first_name = model.tournaments_list[-1].rounds_list[-1][match_count][0].first_name
+                for index, name in enumerate(model.tournaments_list[-1].players_list):
+                    if name.last_name == last_name and name.first_name == first_name:
+                        model.tournaments_list[-1].players_list[index].score += 1
+                        match_count += 1
+                        vv.View.a_player_won(model.tournaments_list[-1].players_list[index].first_name,
+                                             model.tournaments_list[-1].players_list[index].last_name)
+
+            elif match_result == "2":
+                last_name = model.tournaments_list[-1].rounds_list[-1][match_count][1].last_name
+                first_name = model.tournaments_list[-1].rounds_list[-1][match_count][1].first_name
+                for index, name in enumerate(model.tournaments_list[-1].players_list):
+                    if name.last_name == last_name and name.first_name == first_name:
+                        model.tournaments_list[-1].players_list[index].score += 1
+                        match_count += 1
+                        vv.View.a_player_won(model.tournaments_list[-1].players_list[index].first_name,
+                                             model.tournaments_list[-1].players_list[index].last_name)
+            else:
+                vv.View.enter_score_instructions_help()
+
+    def add_player(self):
         player_last_name = vv.View.ask_player_last_name()
         player_first_name = vv.View.ask_player_first_name()
 
@@ -138,8 +182,8 @@ class Controller:
         new_player = model.Player(player_last_name, player_first_name, player_date_of_birth,
                                   player_gender, player_elo)
 
-        model.player_list.append(new_player)
-        cls.main()
+        model.players_list.append(new_player)
+        self.main()
 
     @staticmethod
     def get_time():

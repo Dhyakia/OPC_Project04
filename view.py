@@ -29,11 +29,11 @@ class View:
         print("You must follow the YYYY-MM-DD format")
 
     def ask_tournament_duration():
-        tournament_duration_input = input("[Default is: 1 day] Enter the duration : ")
+        tournament_duration_input = input("[Empty for default (1 day)] Enter the duration : ")
         return tournament_duration_input
 
     def ask_tournament_number_of_turns():
-        tournament_number_of_turns_input = input("[Default is: 4 rounds] Enter the number of rounds: ")
+        tournament_number_of_turns_input = input("[Empty for default (4 rounds)] Enter the number of rounds: ")
         return tournament_number_of_turns_input
 
     def ask_tournament_speed():
@@ -87,8 +87,35 @@ class View:
     def tournament_can_start():
         print("Sucessfully added 8 players, the tournament can now start")
 
-    def generating_first_turn_pair():
+    def generating_first_turn_matchs():
         print('generating first turn matchs ...')
 
-    def show_user_matchup(match):
-        print(f'{match[0].first_name} {match[0].last_name} VS {match[1].last_name} {match[1].first_name}')
+    def generating_matchs():
+        print('generating matchs ...')
+
+    def show_user_matchup(match1, match2, match3, match4):
+        print(f'Match 1: {match1[0].last_name} {match1[0].first_name} VS {match1[1].last_name} {match1[1].first_name}')
+        print(f'Match 2: {match2[0].last_name} {match2[0].first_name} VS {match2[1].last_name} {match2[1].first_name}')
+        print(f'Match 3: {match3[0].last_name} {match3[0].first_name} VS {match3[1].last_name} {match3[1].first_name}')
+        print(f'Match 4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')
+
+    def ask_user_match_result(match_count):
+        match_result = input(f"Match {match_count} resultat: ")
+        return match_result
+
+    def enter_score_instructions():
+        print("Enter 0 for a draw, 1 if player1 won and 2 if player2 won")
+
+    def enter_score_instructions_help():
+        print("Enter 0 for a draw, 1 if player_01 won and 2 if player_2 won")
+        print("")
+        print("Exemple :")
+        print("Match 1: X vs Y")
+        print("Match 1 resultat: 1")
+        print("X won")
+
+    def a_player_won(player_last_name, player_first_name):
+        print(f"{player_last_name} {player_first_name} won")
+
+    def draw(match):
+        print(f"Match {match} was a draw")
