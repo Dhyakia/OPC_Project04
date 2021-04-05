@@ -1,4 +1,4 @@
-# Because all methods ( as of 25.03.2021 ) are statics, it might not be needed to create a class
+from tabulate import tabulate
 
 
 class View:
@@ -10,8 +10,8 @@ class View:
         print("Goodbye !")
 
     def ask_main_menu():
-        logic_start = input("Do you want to create a [T]ournament or [A]dd a new player ?\n")
-        return logic_start
+        start = input("Do you want to start a new [T]ournament or [A]dd a new player ? [X] if you want to quit\n")
+        return start
 
     def ask_tournament_name():
         tournament_name_input = input("Enter the name: ")
@@ -41,7 +41,7 @@ class View:
         return tournament_speed_input
 
     def ask_tournament_speed_help():
-        print("Speed format must be 'bullet', blitz' or 'swift play'")
+        print("Speed format must be 'bullet', blitz' or 'rapid'")
 
     def ask_tournament_info():
         tournament_info_input = input("TO remark's: ")
@@ -94,12 +94,15 @@ class View:
         print('generating matchs ...')
 
     def show_user_matchup(match1, match2, match3, match4):
+        print('')
         print(f'Match 1: {match1[0].last_name} {match1[0].first_name} VS {match1[1].last_name} {match1[1].first_name}')
         print(f'Match 2: {match2[0].last_name} {match2[0].first_name} VS {match2[1].last_name} {match2[1].first_name}')
         print(f'Match 3: {match3[0].last_name} {match3[0].first_name} VS {match3[1].last_name} {match3[1].first_name}')
         print(f'Match 4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')
+        print('')
 
     def ask_user_match_result(match_count):
+        print('')
         match_result = input(f"Match {match_count} resultat: ")
         return match_result
 
@@ -119,3 +122,22 @@ class View:
 
     def draw(match):
         print(f"Match {match} was a draw")
+
+    def round_1_annoucement(time):
+        print('')
+        print('Round 1')
+        print(f'Start time: {time}')
+
+    def round_second_to_last_annoucement(rounds_count, time):
+        print('')
+        print(f'Rounds {rounds_count}')
+        print(f'Start time: {time}')
+
+    def end_of_round_time(time):
+        print(f'End time: {time}')
+        print('')
+
+    def tournament_player_table(table):
+        print('')
+        print(tabulate(table, headers=["Last name", "First name", "Score"]))
+        print('')
