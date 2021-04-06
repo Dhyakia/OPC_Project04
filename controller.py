@@ -11,27 +11,45 @@ class Controller:
 
     def main(self):
         start_logic = vv.View.ask_main_menu()
-        if start_logic.lower() == "x":
-            vv.View.goodbye()
+        flow = True
+        while flow is True:
 
-        elif start_logic.lower() == "a":
-            self.add_player()
+            if start_logic.lower() == "t":
+                resume_or_start = vv.View.ask_resume_or_start()
 
-        elif start_logic.lower() == "t":
-            self.get_new_tournament_data()
-            self.get_8_players()
-            self.first_round_generator()
-            self.enter_score()
+                if resume_or_start.lower() == "r":
+                    # TODO resume a saved tournament
+                    # ask for player or tournament info
+                    pass
 
-            # if left empty (default), SOMETIMES (~half the time) i get this error
-            # "ValueError invalid literal for int with base 10 error in Python"
+                elif resume_or_start.lower() == "n":
+                    self.get_new_tournament_data()
+                    self.get_8_players()
+                    self.first_round_generator()
+                    self.enter_score()
 
-            number_of_rounds = model.tournaments_list[-1].number_of_turns
-            number_of_loop = (int(number_of_rounds) - 1)
-            for rounds in range(int(number_of_loop)):
-                self.second_to_last_round_generator(rounds)
-                self.enter_score()
-            self.end_of_tournament_table()
+                    # if left empty (default), SOMETIMES (~half the time) i get this error
+                    # "ValueError invalid literal for int with base 10 error in Python"
+                    # TODO rematch are still not done
+                    # TODO save the program at any time
+
+                    number_of_rounds = model.tournaments_list[-1].number_of_turns
+                    number_of_loop = (int(number_of_rounds) - 1)
+                    for rounds in range(int(number_of_loop)):
+                        self.second_to_last_round_generator(rounds)
+                        self.enter_score()
+                    self.end_of_tournament_table()
+
+            elif start_logic.lower() == "a":
+                self.add_player()
+
+            elif start_logic.lower() == "d":
+                user_view = vv.View.ask_player_or_tournament()
+                self.show_data_list(user_view)
+
+            elif start_logic.lower() == "x":
+                vv.View.goodbye()
+                flow = False
 
     def get_new_tournament_data(self):
         tournament_name = vv.View.ask_tournament_name()
@@ -72,6 +90,8 @@ class Controller:
             error_message_counter = []
             for index, name in enumerate(model.players_list):
                 if name.last_name == player_last_name and name.first_name == player_first_name:
+                    model.players_list[index].score = float(0)
+                    model.players_list[index].last_played = str('')
                     model.tournaments_list[-1].players_list.append(model.players_list[index])
                     vv.View.player_has_been_added(player_entering_tournament)
                 else:
@@ -95,6 +115,7 @@ class Controller:
         match_02 = top_half_players[1], bottom_half_players[1]
         match_03 = top_half_players[2], bottom_half_players[2]
         match_04 = top_half_players[3], bottom_half_players[3]
+
         round_name = 'Round 1'
         start_time = self.get_time()
 
@@ -116,8 +137,6 @@ class Controller:
         match_04 = players_list_by_score[6], players_list_by_score[7]
         round_name = str(f'Round {rounds_count}')
         start_time = self.get_time()
-
-        # TODO; if the player n°1 already played vs the n°2, then play vs n°3
 
         round = [match_01, match_02, match_03, match_04, round_name, start_time]
         model.tournaments_list[-1].rounds_list.append(round)
@@ -206,6 +225,88 @@ class Controller:
         table = [tplayer_1, tplayer_2, tplayer_3, tplayer_4, tplayer_5, tplayer_6, tplayer_7, tplayer_8]
 
         vv.View.tournament_player_table(table)
+
+    def show_data_list(self, user_view):
+
+        if user_view.lower() == "p":
+            alpha_or_rank = vv.View.ask_alpha_or_rank()
+            self.show_all_players(alpha_or_rank)
+
+        elif user_view.lower() == "t":
+            self.show_all_tournaments_table()
+
+        elif len(user_view) > 2:
+            self.show_data_inside_tournament(user_view)
+
+        elif user_view.lower() == "m":
+            # Ask mentor - How to get back into the main loop ?
+            pass
+
+    def show_all_tournaments_table(self):
+        table = []
+        for tournament in model.tournaments_list:
+            name = tournament.name
+            location = tournament.location
+            date = tournament.date
+            duration = tournament.duration
+            number_of_turns = tournament.number_of_turns
+            speed = tournament.speed
+            info = tournament.tournament_info
+
+            tournament_data = [name, location, date, duration, number_of_turns, speed, info]
+            table.append(tournament_data)
+
+        vv.View.all_tournaments_table(table)
+
+    def show_all_players(self, alpha_or_rank):
+        user_input = alpha_or_rank
+        table = []
+
+        for player in model.players_list:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+
+            player_data = [last_name, first_name, date_of_birth, gender, elo]
+            table.append(player_data)
+
+        if user_input.lower() == 'a':
+            all_player_sorted_by_alpha = sorted(table, key=lambda x: x[0])
+            vv.View.all_player_table(all_player_sorted_by_alpha)
+
+        elif user_input.lower() == 'r':
+            all_player_sorted_by_rank = sorted(table, key=lambda x: x[4], reverse=True)
+            vv.View.all_player_table(all_player_sorted_by_rank)
+
+    def show_data_inside_tournament(self, user_view):
+        data = user_view
+        rounds = data.find(" -r")
+        matchs = data.find(" -m")
+        players = data.find(" -p")
+
+        # if any of them are equal or more than 0, that mean it's in there
+        if rounds >= 0:
+            tournament_target = data.replace(' -r', '')
+            for index, name in enumerate(model.tournaments_list):
+                if name.name == tournament_target:
+                    model.tournaments_list[index].rounds_list
+                    # TODO; Show all rounds with name, start date & end date
+
+        elif matchs >= 0:
+            tournament_target = data.replace(' -m', '')
+            for index, name in enumerate(model.tournaments_list):
+                if name.name == tournament_target:
+                    model.tournaments_list[index]
+                    # TODO; Target ALL 4 match for EVERY round, then print the match-up (X vs Y)
+
+        elif players >= 0:
+            tournament_target = data.replace(' -p', '')
+            for index, name in enumerate(model.tournaments_list):
+                if name.name == tournament_target:
+                    model.tournaments_list[index]
+                    # TODO; fetch the players list + ask for alpha or rank + show
 
     def add_player(self):
         player_last_name = vv.View.ask_player_last_name()

@@ -4,14 +4,34 @@ from tabulate import tabulate
 class View:
 
     def __init__(self):
-        print("Welcome to torga")
+        print("Welcome to torga\n")
 
     def goodbye():
         print("Goodbye !")
 
     def ask_main_menu():
-        start = input("Do you want to start a new [T]ournament or [A]dd a new player ? [X] if you want to quit\n")
+        print("To create/resume a tourmament, enter [T]\nTo add a new player, enter [A]")
+        print("To access the database, enter [D]\nTo quit, enter [X]")
+        start = input("")
         return start
+
+    def ask_resume_or_start():
+        user_input = input("To resume a tournament, enter [R]\nTo start a new tournament, enter [N]\n")
+        return user_input
+
+    def ask_player_or_tournament():
+        print('')
+        print("[P] to see all the players\n[T] to see all the tournaments\n[M] to return to the main menu\n")
+        print("To see information regarding a specific tournament, simply enter the tournament's name like so:")
+        print("'exemple_tournament -r' to see the rounds")
+        print("'exemple_tournament -m' to see the matchs")
+        print("'exemple_tournament -p' to see the players")
+        user_input = input("")
+        return user_input
+
+    def ask_alpha_or_rank():
+        user_input = input("In what order ? [A]lpha or [R]ank\n")
+        return user_input
 
     def ask_tournament_name():
         tournament_name_input = input("Enter the name: ")
@@ -68,6 +88,7 @@ class View:
 
     def ask_player_elo():
         player_elo_input = input("Enter elo: ")
+        print("")
         return player_elo_input
 
     def ask_player_elo_help():
@@ -140,4 +161,14 @@ class View:
     def tournament_player_table(table):
         print('')
         print(tabulate(table, headers=["Last name", "First name", "Score"]))
+        print('')
+
+    def all_tournaments_table(table):
+        print('')
+        print(tabulate(table, headers=["Name", "Location", "Date", "Duration", "Number of turns", "Format", "Info"]))
+        print('')
+
+    def all_player_table(table):
+        print('')
+        print(tabulate(table, headers=["Last name", "First name", "date of birth", "Gender", "Elo"]))
         print('')
