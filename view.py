@@ -1,5 +1,7 @@
 from tabulate import tabulate
 
+# Passer les views dans le self
+
 
 class View:
 

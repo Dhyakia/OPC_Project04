@@ -24,18 +24,18 @@ class Controller:
 
                 elif resume_or_start.lower() == "n":
                     self.get_new_tournament_data()
+                    print(type(model.tournaments_list[-1].number_of_turns))
                     self.get_8_players()
                     self.first_round_generator()
-                    self.enter_score()
-
+                    self.enter_score()                    
                     # if left empty (default), SOMETIMES (~half the time) i get this error
                     # "ValueError invalid literal for int with base 10 error in Python"
                     # TODO rematch are still not done
                     # TODO save the program at any time
 
                     number_of_rounds = model.tournaments_list[-1].number_of_turns
-                    number_of_loop = (int(number_of_rounds) - 1)
-                    for rounds in range(int(number_of_loop)):
+                    number_of_loop = number_of_rounds - 1
+                    for rounds in range(number_of_loop):
                         self.second_to_last_round_generator(rounds)
                         self.enter_score()
                     self.end_of_tournament_table()
@@ -76,7 +76,7 @@ class Controller:
             tournament_speed = vv.View.ask_tournament_speed()
 
         tournament_info = vv.View.ask_tournament_info()
-
+        # TODO string vide donc None et pas vide !
         new_tournament_data = model.Tournament(tournament_name, tournament_location, tournament_date,
                                                tournament_duration, tournament_number_of_turns, tournament_speed,
                                                tournament_info)
@@ -238,9 +238,8 @@ class Controller:
         elif len(user_view) > 2:
             self.show_data_inside_tournament(user_view)
 
-        elif user_view.lower() == "m":
-            # Ask mentor - How to get back into the main loop ?
-            pass
+        else:
+            return
 
     def show_all_tournaments_table(self):
         table = []
