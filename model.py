@@ -2,15 +2,13 @@ class Tournament:
 
     CONSTANT_NUMBER_OF_TOURNAMENT_PLAYER = 8
 
-    def __init__(self, name, location, date, duration=int(1), number_of_turns=4, speed="", tournament_info=""):
+    def __init__(self, name, location, date, duration=int(1), number_of_turns=4, speed='', tournament_info=''):
         # explicit
         self.name = name
         self.location = location
         self.date = date
         self.duration = duration
-        self.number_of_turns = int(number_of_turns)
-        if not number_of_turns:
-            number_of_turns = 4
+        self.number_of_turns = number_of_turns
         self.speed = speed
         self.tournament_info = tournament_info
         # implicit
