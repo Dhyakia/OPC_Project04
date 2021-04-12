@@ -122,7 +122,7 @@ class View:
         print(f'Match 4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')
         print('')
 
-    def ask_user_match_result(match_count):
+    def ask_user_match_result(self, match_count):
         print('')
         match_result = input(f"Match {match_count} resultat: ")
         return match_result
@@ -172,3 +172,7 @@ class View:
         print('')
         print(tabulate(table, headers=["Last name", "First name", "date of birth", "Gender", "Elo"]))
         print('')
+
+    def round_info_table(self, name, start, end):
+        print('')
+        print(f'Name: {name}, start:{start}, end:{end}')
