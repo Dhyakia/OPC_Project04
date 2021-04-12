@@ -17,10 +17,6 @@ class Controller:
             players_list = self.database_to_players_list(model.players_table.all())
             tournaments_list = self.database_to_tournaments_list(model.tournaments_table.all())
 
-            # tournament list data is all wrong = some symbols gets added
-            print(tournaments_list[0].name)
-            print(tournaments_list[1].name)
-
             if start_logic.lower() == "t":
                 resume_or_start = self.view.ask_resume_or_start()
                 self.tournament_logic(resume_or_start, players_list, tournaments_list)
@@ -338,10 +334,10 @@ class Controller:
             tournament_target = data.replace(' -r', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
-                    for rounds in tournaments_list[index].rounds_list:
-                        round_name = tournaments_list[index].rounds_list[4]
-                        round_start = tournaments_list[index].rounds_list[5]
-                        round_end = tournaments_list[index].rounds_list[6]
+                    for rounds_counter, round_data in enumerate(tournaments_list[index].rounds_list):
+                        round_name = round_data[rounds_counter][4]
+                        round_start = round_data[rounds_counter][5]
+                        round_end = round_data[rounds_counter][6]
                         self.view.round_info_table(round, round_start, round_end)
 
         elif matchs >= 0:
@@ -355,7 +351,7 @@ class Controller:
             tournament_target = data.replace(' -p', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
-                    tournaments_list[index]
+                    tournament_player_list = tournaments_list[index]
                     # TODO; fetch the players list + ask for alpha or rank + show
 
     def player_to_database(self, player_to_dabatase):
@@ -401,12 +397,12 @@ class Controller:
         tournaments_list = []
         all_serialized_tournament = list(serialiazed_tournaments)
         for tournament in all_serialized_tournament:
-            name = tournament['Name'],
-            location = tournament['Location'],
-            date = tournament['Date'],
-            duration = tournament['Duration'],
-            number_of_turns = tournament['Number_of_turns'],
-            speed = tournament['Speed'],
+            name = tournament['Name']
+            location = tournament['Location']
+            date = tournament['Date']
+            duration = tournament['Duration']
+            number_of_turns = tournament['Number_of_turns']
+            speed = tournament['Speed']
             tournament_info = tournament['Tournament_info']
 
             tournament = model.Tournament(name, location, date, duration, number_of_turns, speed, tournament_info)

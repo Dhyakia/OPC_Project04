@@ -2,8 +2,6 @@ from tinydb import TinyDB
 
 database = TinyDB('data.json')
 players_table = database.table('players')
-
-tournaments_db = TinyDB('data.json')
 tournaments_table = database.table('tournaments')
 
 
