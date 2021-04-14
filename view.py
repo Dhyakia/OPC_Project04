@@ -175,4 +175,4 @@ class View:
 
     def round_info_table(self, name, start, end):
         print('')
-        print(f'Name: {name}, start:{start}, end:{end}')
+        print(f'Name:{name}, start:{start}, end:{end}')

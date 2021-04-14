@@ -87,7 +87,7 @@ class Controller:
         tournament_info = self.view.ask_tournament_info()
         new_tournament_data = model.Tournament(tournament_name, tournament_location, tournament_date,
                                                tournament_duration, tournament_number_of_turns, tournament_speed,
-                                               tournament_info)
+                                               tournament_info, [], [])
 
         tournaments_list.append(new_tournament_data)
 
@@ -141,10 +141,10 @@ class Controller:
         players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
                                        key=lambda x: x.score, reverse=True)
 
-        match_01 = players_list_by_score[0], players_list_by_score[1]
-        match_02 = players_list_by_score[2], players_list_by_score[3]
-        match_03 = players_list_by_score[4], players_list_by_score[5]
-        match_04 = players_list_by_score[6], players_list_by_score[7]
+        match_01 = (players_list_by_score[0], players_list_by_score[1])
+        match_02 = (players_list_by_score[2], players_list_by_score[3])
+        match_03 = (players_list_by_score[4], players_list_by_score[5])
+        match_04 = (players_list_by_score[6], players_list_by_score[7])
         round_name = str(f'Round {rounds_count}')
         start_time = self.get_time()
 
@@ -335,24 +335,25 @@ class Controller:
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
                     for rounds_counter, round_data in enumerate(tournaments_list[index].rounds_list):
-                        round_name = round_data[rounds_counter][4]
-                        round_start = round_data[rounds_counter][5]
-                        round_end = round_data[rounds_counter][6]
-                        self.view.round_info_table(round, round_start, round_end)
+                        round_name = round_data[4]
+                        round_start = round_data[5]
+                        round_end = round_data[6]
+                        self.view.round_info_table(round_name, round_start, round_end)
+                        # TODO
 
         elif matchs >= 0:
             tournament_target = data.replace(' -m', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
                     tournaments_list[index]
-                    # TODO; Target ALL 4 match for EVERY round, then print the match-up (X vs Y)
+                    # TODO
 
         elif players >= 0:
             tournament_target = data.replace(' -p', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
                     tournament_player_list = tournaments_list[index]
-                    # TODO; fetch the players list + ask for alpha or rank + show
+                    # TODO
 
     def player_to_database(self, player_to_dabatase):
         serialiazed_player = {
@@ -364,19 +365,6 @@ class Controller:
         }
 
         model.players_table.insert(serialiazed_player)
-
-    def tournament_to_database(self, tournament_to_database):
-        serialiazed_tournament = {
-            'Name': tournament_to_database.name,
-            'Location': tournament_to_database.location,
-            'Date': tournament_to_database.date,
-            'Duration': tournament_to_database.duration,
-            'Number_of_turns': tournament_to_database.number_of_turns,
-            'Speed': tournament_to_database.speed,
-            'Tournament_info': tournament_to_database.tournament_info
-        }
-
-        model.tournaments_table.insert(serialiazed_tournament)
 
     def database_to_players_list(self, serialiazed_players):
         players_list = []
@@ -393,6 +381,68 @@ class Controller:
 
         return players_list
 
+    def tournament_to_database(self, tournament_to_database):
+        serialiazed_tournament = {
+            'Name': tournament_to_database.name,
+            'Location': tournament_to_database.location,
+            'Date': tournament_to_database.date,
+            'Duration': tournament_to_database.duration,
+            'Number_of_turns': tournament_to_database.number_of_turns,
+            'Speed': tournament_to_database.speed,
+            'Tournament_info': tournament_to_database.tournament_info,
+            'Tournaments_players': self.tourmanent_player_list_serializer(
+                tournament_to_database.tournament_players_list),
+            'Tournaments_rounds': self.tournament_rounds_list_serializer(
+                tournament_to_database.rounds_list)
+        }
+
+        model.tournaments_table.insert(serialiazed_tournament)
+
+    def tourmanent_player_list_serializer(self, tournament_player_list):
+        player_data = []
+        for player in tournament_player_list:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+
+            player = [last_name, first_name, date_of_birth, gender, elo]
+            player_data.append(player)
+
+        return player_data
+
+    def tournament_rounds_list_serializer(self, tournament_rounds_list):
+        round_data = []
+        for round in tournament_rounds_list:
+            match_1 = self.tournament_rounds_list_players_serializer(round[0])
+            match_2 = self.tournament_rounds_list_players_serializer(round[1])
+            match_3 = self.tournament_rounds_list_players_serializer(round[2])
+            match_4 = self.tournament_rounds_list_players_serializer(round[3])
+
+            round_name = round[4]
+            round_start = round[5]
+            round_end = round[6]
+
+            round = [match_1, match_2, match_3, match_4, round_name, round_start, round_end]
+            round_data.append(round)
+
+        return round_data
+
+    def tournament_rounds_list_players_serializer(self, match):
+        players_data = []
+        for player in match:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+
+            player = (last_name, first_name, date_of_birth, gender, elo)
+            players_data.append(player)
+
+        return players_data
+
     def database_to_tournaments_list(self, serialiazed_tournaments):
         tournaments_list = []
         all_serialized_tournament = list(serialiazed_tournaments)
@@ -404,11 +454,46 @@ class Controller:
             number_of_turns = tournament['Number_of_turns']
             speed = tournament['Speed']
             tournament_info = tournament['Tournament_info']
+            tournament_players = self.database_to_tournaments_list_players_list_format(
+                tournament['Tournaments_players'])
+            tournament_rounds = self.database_to_tournaments_list_rounds_list_format(
+                tournament['Tournaments_rounds'])
 
-            tournament = model.Tournament(name, location, date, duration, number_of_turns, speed, tournament_info)
+            tournament = model.Tournament(name, location, date, duration, number_of_turns, speed, tournament_info,
+                                          tournament_players, tournament_rounds)
             tournaments_list.append(tournament)
 
         return tournaments_list
+
+    def database_to_tournaments_list_players_list_format(self, tournaments_players_list_serialized):
+        players_data = []
+        for player in tournaments_players_list_serialized:
+            last_name = player[0]
+            first_name = player[1]
+            date_of_birth = player[2]
+            gender = player[3]
+            elo = player[4]
+
+            player = model.Player(last_name, first_name, date_of_birth, gender, elo)
+            players_data.append(player)
+
+        return players_data
+
+    def database_to_tournaments_list_rounds_list_format(self, tournament_rounds_list_serialized):
+        rounds_data = []
+        for rounds in tournament_rounds_list_serialized:
+            match_1 = self.database_to_tournaments_list_players_list_format(rounds[0])
+            match_2 = self.database_to_tournaments_list_players_list_format(rounds[1])
+            match_3 = self.database_to_tournaments_list_players_list_format(rounds[2])
+            match_4 = self.database_to_tournaments_list_players_list_format(rounds[3])
+            round_name = rounds[4]
+            round_start = rounds[5]
+            round_end = rounds[6]
+
+            round = [match_1, match_2, match_3, match_4, round_name, round_start, round_end]
+            rounds_data.append(round)
+
+        return rounds_data
 
     @staticmethod
     def get_time():

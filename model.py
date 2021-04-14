@@ -9,8 +9,8 @@ class Tournament:
 
     NUMBER_OF_TOURNAMENT_PLAYER = 8
 
-    def __init__(self, name, location, date, duration=int(1), number_of_turns=4, speed='', tournament_info=''):
-        # explicit
+    def __init__(self, name, location, date, duration=int(1), number_of_turns=4, speed='',
+                 tournament_info='', players_list=[], rounds_list=[]):
         self.name = name
         self.location = location
         self.date = date
@@ -18,9 +18,8 @@ class Tournament:
         self.number_of_turns = number_of_turns
         self.speed = speed
         self.tournament_info = tournament_info
-        # implicit
-        self.tournament_players_list = []
-        self.rounds_list = []
+        self.tournament_players_list = players_list
+        self.rounds_list = rounds_list
 
 
 class Player:
@@ -32,6 +31,5 @@ class Player:
         self.date_of_birth = date_of_birth
         self.gender = gender
         self.elo = elo
-        # implicit
         self.score = float(0)
         self.last_played = ""
