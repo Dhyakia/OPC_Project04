@@ -176,3 +176,11 @@ class View:
     def round_info_table(self, name, start, end):
         print('')
         print(f'Name:{name}, start:{start}, end:{end}')
+
+    def show_all_matchs(self, round_name, match1, match2, match3, match4):
+        print('')
+        print(f'{round_name}')
+        print(f'Match1: {match1[0].last_name} {match1[0].first_name} VS {match1[1].last_name} {match1[1].first_name}')
+        print(f'Match2: {match2[0].last_name} {match2[0].first_name} VS {match2[1].last_name} {match2[1].first_name}')
+        print(f'Match3: {match3[0].last_name} {match3[0].first_name} VS {match3[1].last_name} {match3[1].first_name}')
+        print(f'Match4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')

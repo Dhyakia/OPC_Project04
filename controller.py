@@ -324,6 +324,28 @@ class Controller:
             all_player_sorted_by_rank = sorted(table, key=lambda x: x[4], reverse=True)
             self.view.all_player_table(all_player_sorted_by_rank)
 
+    def show_all_players_in_tournament(self, alpha_or_rank, players_list):
+        user_input = alpha_or_rank
+        table = []
+
+        for player in players_list:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+
+            player_data = [last_name, first_name, date_of_birth, gender, elo]
+            table.append(player_data)
+
+        if user_input.lower() == 'a':
+            all_player_sorted_by_alpha = sorted(table, key=lambda x: x[0])
+            self.view.all_player_table(all_player_sorted_by_alpha)
+
+        elif user_input.lower() == 'r':
+            all_player_sorted_by_rank = sorted(table, key=lambda x: x[4], reverse=True)
+            self.view.all_player_table(all_player_sorted_by_rank)
+
     def show_data_inside_tournament(self, user_view, tournaments_list):
         data = user_view
         rounds = data.find(" -r")
@@ -334,26 +356,30 @@ class Controller:
             tournament_target = data.replace(' -r', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
-                    for rounds_counter, round_data in enumerate(tournaments_list[index].rounds_list):
+                    for round_data in tournaments_list[index].rounds_list:
                         round_name = round_data[4]
                         round_start = round_data[5]
                         round_end = round_data[6]
                         self.view.round_info_table(round_name, round_start, round_end)
-                        # TODO
 
         elif matchs >= 0:
             tournament_target = data.replace(' -m', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
-                    tournaments_list[index]
-                    # TODO
+                    for rounds in tournaments_list[index].rounds_list:
+                        match1 = rounds[0]
+                        match2 = rounds[1]
+                        match3 = rounds[2]
+                        match4 = rounds[3]
+                        round_name = rounds[4]
+                        self.view.show_all_matchs(round_name, match1, match2, match3, match4)
 
         elif players >= 0:
             tournament_target = data.replace(' -p', '')
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
-                    tournament_player_list = tournaments_list[index]
-                    # TODO
+                    user_input = self.view.ask_alpha_or_rank()
+                    self.show_all_players(user_input, tournaments_list[index].tournament_players_list)
 
     def player_to_database(self, player_to_dabatase):
         serialiazed_player = {
