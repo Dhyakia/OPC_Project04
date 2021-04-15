@@ -42,7 +42,6 @@ class Controller:
             self.get_8_players(players_list, tournaments_list)
             self.first_round_generator(tournaments_list)
             self.enter_score(tournaments_list)
-            # TODO rematch are still not done
 
             number_of_rounds = int(tournaments_list[-1].number_of_turns)
             number_of_loop = number_of_rounds - 1
@@ -120,10 +119,19 @@ class Controller:
         top_half_players = players_list_by_elo[:middle]
         bottom_half_players = players_list_by_elo[middle:]
 
-        match_01 = top_half_players[0], bottom_half_players[0]
-        match_02 = top_half_players[1], bottom_half_players[1]
-        match_03 = top_half_players[2], bottom_half_players[2]
-        match_04 = top_half_players[3], bottom_half_players[3]
+        match_01 = (top_half_players[0], bottom_half_players[0])
+        match_02 = (top_half_players[1], bottom_half_players[1])
+        match_03 = (top_half_players[2], bottom_half_players[2])
+        match_04 = (top_half_players[3], bottom_half_players[3])
+
+        top_half_players[0].last_played = bottom_half_players[0].last_name + ' ' + bottom_half_players[0].first_name
+        top_half_players[1].last_played = bottom_half_players[1].last_name + ' ' + bottom_half_players[1].first_name
+        top_half_players[2].last_played = bottom_half_players[2].last_name + ' ' + bottom_half_players[2].first_name
+        top_half_players[3].last_played = bottom_half_players[3].last_name + ' ' + bottom_half_players[3].first_name
+        bottom_half_players[0].last_played = top_half_players[0].last_name + ' ' + top_half_players[0].first_name
+        bottom_half_players[1].last_played = top_half_players[1].last_name + ' ' + top_half_players[1].first_name
+        bottom_half_players[2].last_played = top_half_players[2].last_name + ' ' + top_half_players[2].first_name
+        bottom_half_players[3].last_played = top_half_players[3].last_name + ' ' + top_half_players[3].first_name
 
         round_name = 'Round 1'
         start_time = self.get_time()
@@ -140,19 +148,37 @@ class Controller:
 
         players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
                                        key=lambda x: x.score, reverse=True)
+        round = []
+        index = 1
+        while len(players_list_by_score) != 0:
+            last_name = players_list_by_score[index].last_name
+            first_name = players_list_by_score[index].first_name
+            full_name = (last_name + ' ' + first_name)
 
-        match_01 = (players_list_by_score[0], players_list_by_score[1])
-        match_02 = (players_list_by_score[2], players_list_by_score[3])
-        match_03 = (players_list_by_score[4], players_list_by_score[5])
-        match_04 = (players_list_by_score[6], players_list_by_score[7])
+            if players_list_by_score[0].last_played == full_name:
+                match = (players_list_by_score[0], players_list_by_score[index + 1])
+
+                del players_list_by_score[index + 1]
+                del players_list_by_score[0]
+                round.append(match)
+
+            if players_list_by_score[0].last_played != full_name:
+                match = (players_list_by_score[0], players_list_by_score[index])
+
+                del players_list_by_score[index]
+                del players_list_by_score[0]
+                round.append(match)
+
         round_name = str(f'Round {rounds_count}')
         start_time = self.get_time()
 
-        round = [match_01, match_02, match_03, match_04, round_name, start_time]
+        round.append(round_name)
+        round.append(start_time)
+
         tournaments_list[-1].rounds_list.append(round)
 
         self.view.round_second_to_last_annoucement(rounds_count, start_time)
-        self.view.show_user_matchup(match_01, match_02, match_03, match_04)
+        self.view.show_user_matchup(round[0], round[1], round[2], round[3])
 
     def enter_score(self, tournaments_list):
         self.view.enter_score_instructions()
