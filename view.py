@@ -132,7 +132,6 @@ class View:
 
     def enter_score_instructions_help(self):
         print("Enter 0 for a draw, 1 if player_01 won and 2 if player_2 won")
-        print("")
         print("Exemple :")
         print("Match 1: X vs Y")
         print("Match 1 resultat: 1")
@@ -155,6 +154,7 @@ class View:
         print(f'Start time: {time}')
 
     def end_of_round_time(self, time):
+        print('')
         print(f'End time: {time}')
         print('')
 
@@ -176,6 +176,7 @@ class View:
     def round_info_table(self, name, start, end):
         print('')
         print(f'Name:{name}, start:{start}, end:{end}')
+        print('')
 
     def show_all_matchs(self, round_name, match1, match2, match3, match4):
         print('')
@@ -184,3 +185,19 @@ class View:
         print(f'Match2: {match2[0].last_name} {match2[0].first_name} VS {match2[1].last_name} {match2[1].first_name}')
         print(f'Match3: {match3[0].last_name} {match3[0].first_name} VS {match3[1].last_name} {match3[1].first_name}')
         print(f'Match4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')
+        print('')
+
+    def tournament_is_saved(self, tournament_name):
+        print('')
+        print(f'{tournament_name} tourmament has been saved.')
+        print('')
+
+    def show_user_loading(self, tournament_name):
+        print('')
+        print(f'{tournament_name} loading ...')
+        print('')
+
+    def show_user_loading_successful(self, tournament_name):
+        print('')
+        print(f'{tournament_name} successfully loaded, the tournament can now resume')
+        print('')

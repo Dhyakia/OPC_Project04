@@ -16,10 +16,11 @@ class Controller:
 
             players_list = self.database_to_players_list(model.players_table.all())
             tournaments_list = self.database_to_tournaments_list(model.tournaments_table.all())
+            saved_game = self.saved_tournament_to_memory(model.save_table)
 
             if start_logic.lower() == "t":
                 resume_or_start = self.view.ask_resume_or_start()
-                self.tournament_logic(resume_or_start, players_list, tournaments_list)
+                self.tournament_logic(resume_or_start, players_list, tournaments_list, saved_game)
 
             elif start_logic.lower() == "a":
                 self.add_player(players_list)
@@ -32,10 +33,28 @@ class Controller:
                 self.view.goodbye()
                 flow = False
 
-    def tournament_logic(self, user_input, players_list, tournaments_list):
+    def tournament_logic(self, user_input, players_list, tournaments_list, saved_game):
         if user_input.lower() == "r":
-            # TODO Resume tournament
-            pass
+            self.view.show_user_loading(saved_game.name)
+            tournaments_list.append(saved_game)
+            self.view.show_user_loading_successful(tournaments_list[-1].name)
+
+            self.view.show_all_matchs(
+                tournaments_list[-1].rounds_list[-1][4], tournaments_list[-1].rounds_list[-1][0],
+                tournaments_list[-1].rounds_list[-1][1], tournaments_list[-1].rounds_list[-1][2],
+                tournaments_list[-1].rounds_list[-1][3])
+            self.enter_score(tournaments_list)
+
+            loop = len(tournaments_list[-1].rounds_list)
+            number_of_rounds = tournaments_list[-1].number_of_turns
+            for rounds in range(number_of_rounds):
+                if rounds < loop:
+                    pass
+                else:
+                    self.second_to_last_round_generator(rounds, tournaments_list)
+                    self.enter_score(tournaments_list)
+                self.end_of_tournament_table(tournaments_list)
+                self.tournament_to_database(tournaments_list[-1])
 
         elif user_input.lower() == "n":
             self.get_new_tournament_data(tournaments_list)
@@ -218,6 +237,14 @@ class Controller:
                         match_count += 1
                         self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
                                                tournaments_list[-1].tournament_players_list[index].last_name)
+
+            elif match_result.lower() == "save":
+                model.save_table.truncate()
+                self.tournament_to_database_save(tournaments_list[-1])
+                self.view.tournament_is_saved(tournaments_list[-1].name)
+                self.view.goodbye()
+                exit()
+
             else:
                 self.view.enter_score_instructions_help()
 
@@ -450,6 +477,23 @@ class Controller:
 
         model.tournaments_table.insert(serialiazed_tournament)
 
+    def tournament_to_database_save(self, tournament_to_database):
+        serialiazed_tournament = {
+            'Name': tournament_to_database.name,
+            'Location': tournament_to_database.location,
+            'Date': tournament_to_database.date,
+            'Duration': tournament_to_database.duration,
+            'Number_of_turns': tournament_to_database.number_of_turns,
+            'Speed': tournament_to_database.speed,
+            'Tournament_info': tournament_to_database.tournament_info,
+            'Tournaments_players': self.tourmanent_player_list_serializer_save(
+                tournament_to_database.tournament_players_list),
+            'Tournaments_rounds': self.tournament_rounds_list_serializer(
+                tournament_to_database.rounds_list)
+        }
+
+        model.save_table.insert(serialiazed_tournament)
+
     def tourmanent_player_list_serializer(self, tournament_player_list):
         player_data = []
         for player in tournament_player_list:
@@ -464,6 +508,22 @@ class Controller:
 
         return player_data
 
+    def tourmanent_player_list_serializer_save(self, tournament_player_list):
+        player_data = []
+        for player in tournament_player_list:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+            score = player.score
+            last_played = player.last_played
+
+            player = [last_name, first_name, date_of_birth, gender, elo, score, last_played]
+            player_data.append(player)
+
+        return player_data
+
     def tournament_rounds_list_serializer(self, tournament_rounds_list):
         round_data = []
         for round in tournament_rounds_list:
@@ -474,7 +534,10 @@ class Controller:
 
             round_name = round[4]
             round_start = round[5]
-            round_end = round[6]
+            try:
+                round_end = round[6]
+            except IndexError:
+                round_end = ''
 
             round = [match_1, match_2, match_3, match_4, round_name, round_start, round_end]
             round_data.append(round)
@@ -546,6 +609,45 @@ class Controller:
             rounds_data.append(round)
 
         return rounds_data
+
+    def saved_tournament_to_memory(self, serialiazed_tournaments):
+        all_serialized_tournament = list(serialiazed_tournaments)
+        for tournament in all_serialized_tournament:
+            name = tournament['Name']
+            location = tournament['Location']
+            date = tournament['Date']
+            duration = tournament['Duration']
+            number_of_turns = tournament['Number_of_turns']
+            speed = tournament['Speed']
+            tournament_info = tournament['Tournament_info']
+            tournament_players = self.database_to_tournaments_list_players_list_format(
+                tournament['Tournaments_players'])
+            tournament_rounds = self.database_to_tournaments_list_rounds_list_format(
+                tournament['Tournaments_rounds'])
+
+            tournament = model.Tournament(name, location, date, duration, number_of_turns, speed, tournament_info,
+                                          tournament_players, tournament_rounds)
+
+        try:
+            return tournament
+        except UnboundLocalError:
+            pass
+
+    def saved_tournament_to_memory_player_list_format(self, tournaments_players_list_serialized):
+        players_data = []
+        for player in tournaments_players_list_serialized:
+            last_name = player[0]
+            first_name = player[1]
+            date_of_birth = player[2]
+            gender = player[3]
+            elo = player[4]
+            score = player[5]
+            last_played = player[6]
+
+            player = model.Player(last_name, first_name, date_of_birth, gender, elo, score, last_played)
+            players_data.append(player)
+
+        return players_data
 
     @staticmethod
     def get_time():
