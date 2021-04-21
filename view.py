@@ -57,7 +57,7 @@ class View:
         return tournament_number_of_turns_input
 
     def ask_tournament_speed(self):
-        tournament_speed_input = input("Enter the speed format: ")
+        tournament_speed_input = input("[Blitz, Bullet or Rapid] Enter the speed format: ")
         return tournament_speed_input
 
     def ask_tournament_speed_help(self):
@@ -200,4 +200,9 @@ class View:
     def show_user_loading_successful(self, tournament_name):
         print('')
         print(f'{tournament_name} successfully loaded, the tournament can now resume')
+        print('')
+
+    def show_user_right_name_input(self):
+        print('')
+        print("Incorrect input. Make sure you typed 'Lastname Firstname' correctly.")
         print('')

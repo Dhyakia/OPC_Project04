@@ -45,16 +45,17 @@ class Controller:
                 tournaments_list[-1].rounds_list[-1][3])
             self.enter_score(tournaments_list)
 
-            loop = len(tournaments_list[-1].rounds_list)
             number_of_rounds = tournaments_list[-1].number_of_turns
+            number_of_loop = number_of_rounds + 1
+            # it doesn't loop properly there
             for rounds in range(number_of_rounds):
-                if rounds < loop:
-                    pass
-                else:
+                if rounds >= number_of_loop:
                     self.second_to_last_round_generator(rounds, tournaments_list)
                     self.enter_score(tournaments_list)
-                self.end_of_tournament_table(tournaments_list)
-                self.tournament_to_database(tournaments_list[-1])
+                else:
+                    pass
+            self.end_of_tournament_table(tournaments_list)
+            self.tournament_to_database(tournaments_list[-1])
 
         elif user_input.lower() == "n":
             self.get_new_tournament_data(tournaments_list)
@@ -111,21 +112,24 @@ class Controller:
 
     def get_8_players(self, players_list, tournaments_list):
         while len(tournaments_list[-1].tournament_players_list) < model.Tournament.NUMBER_OF_TOURNAMENT_PLAYER:
-            player_entering_tournament = self.view.ask_player_full_name()
-            player_last_name, player_first_name = player_entering_tournament.split(" ")
-            error_message_counter = []
-            for index, name in enumerate(players_list):
-                if name.last_name == player_last_name and name.first_name == player_first_name:
-                    players_list[index].score = float(0)
-                    players_list[index].last_played = str('')
-                    tournaments_list[-1].tournament_players_list.append(players_list[index])
-                    self.view.player_has_been_added(player_entering_tournament)
-                else:
-                    error_message_counter.append("x")
-                    if len(error_message_counter) == len(players_list):
-                        self.view.player_has_been_added_help(player_entering_tournament)
+            try:
+                player_entering_tournament = self.view.ask_player_full_name()
+                player_last_name, player_first_name = player_entering_tournament.split(" ")
+                error_message_counter = []
+                for index, name in enumerate(players_list):
+                    if name.last_name == player_last_name and name.first_name == player_first_name:
+                        players_list[index].score = float(0)
+                        players_list[index].last_played = str('')
+                        tournaments_list[-1].tournament_players_list.append(players_list[index])
+                        self.view.player_has_been_added(player_entering_tournament)
                     else:
-                        pass
+                        error_message_counter.append("x")
+                        if len(error_message_counter) == len(players_list):
+                            self.view.player_has_been_added_help(player_entering_tournament)
+                        else:
+                            pass
+            except ValueError:
+                self.view.show_user_right_name_input()
 
         self.view.tournament_can_start()
 
@@ -324,7 +328,6 @@ class Controller:
         return None
 
     def show_data_list(self, user_view, players_list, tournaments_list):
-
         if user_view.lower() == "p":
             alpha_or_rank = self.view.ask_alpha_or_rank()
             self.show_all_players(alpha_or_rank, players_list)
@@ -335,8 +338,8 @@ class Controller:
         elif len(user_view) > 2:
             self.show_data_inside_tournament(user_view, tournaments_list)
 
-        else:
-            return None
+        elif user_view.lower() == "m":
+            pass
 
     def show_all_tournaments_table(self, tournaments_list):
         table = []
