@@ -54,16 +54,14 @@ class Controller:
                 tournaments_list[-1].rounds_list[-1][3])
             self.enter_score(tournaments_list)
 
-            # TODO doesnt loop properly, night need a specific twist of the generator method to properly
-            # show the right round number
+            loop = len(tournaments_list[-1].rounds_list)
             number_of_rounds = tournaments_list[-1].number_of_turns
-            number_of_loop = number_of_rounds + 1
             for rounds in range(number_of_rounds):
-                if rounds >= number_of_loop:
-                    self.second_to_last_round_generator(rounds, tournaments_list)
-                    self.enter_score(tournaments_list)
-                else:
+                if rounds <= loop:
                     pass
+                else:
+                    self.second_to_last_round_generator_resumed_games(rounds, tournaments_list)
+                    self.enter_score(tournaments_list)
             self.end_of_tournament_table(tournaments_list)
             self.tournament_to_database(tournaments_list[-1])
 
@@ -192,6 +190,46 @@ class Controller:
         # Generate matchs by ordering players by score
         self.view.generating_matchs()
         rounds_count = (rounds + 2)
+
+        players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
+                                       key=lambda x: x.score, reverse=True)
+        round = []
+        index = 1
+        # check for last_played == current; yes = take next in list by score, no = match is set
+        while len(players_list_by_score) != 0:
+            last_name = players_list_by_score[index].last_name
+            first_name = players_list_by_score[index].first_name
+            full_name = (last_name + ' ' + first_name)
+
+            if players_list_by_score[0].last_played == full_name:
+                match = (players_list_by_score[0], players_list_by_score[index + 1])
+
+                del players_list_by_score[index + 1]
+                del players_list_by_score[0]
+                round.append(match)
+
+            if players_list_by_score[0].last_played != full_name:
+                match = (players_list_by_score[0], players_list_by_score[index])
+
+                del players_list_by_score[index]
+                del players_list_by_score[0]
+                round.append(match)
+
+        # finalize the list round, add it to the tournament round_list and show user the matchups
+        round_name = str(f'Round {rounds_count}')
+        start_time = self.get_time()
+        round.append(round_name)
+        round.append(start_time)
+
+        tournaments_list[-1].rounds_list.append(round)
+
+        self.view.round_second_to_last_annoucement(rounds_count, start_time)
+        self.view.show_user_matchup(round[0], round[1], round[2], round[3])
+
+    def second_to_last_round_generator_resumed_games(self, rounds, tournaments_list):
+        # Generate matchs by ordering players by score
+        self.view.generating_matchs()
+        rounds_count = int(rounds)
 
         players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
                                        key=lambda x: x.score, reverse=True)
