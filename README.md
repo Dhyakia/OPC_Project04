@@ -47,7 +47,7 @@ Wait for all the modules to download and install.
 
 # Usage
 
-To start the program, simply enter
+In the console, navigate to where torga.py is located en enter :
 ```
 python torga.py
 ```
