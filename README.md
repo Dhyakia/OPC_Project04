@@ -69,7 +69,7 @@ python torga.py
 
 To generate a new flake8 report, paste this line into your console :
 ```
-flake8 --format=html --htmldir=flake8_rapport --max-line-length=119 --filename=*.py
+flake8 --format=html --htmldir=flake8_rapport --max-line-length=119 --filename=*.py --exclude=.\venv\
 ```
 
 
