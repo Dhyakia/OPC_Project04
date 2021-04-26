@@ -15,11 +15,10 @@ It feature a very basic set of functionnality such as :
 
 * Python3 at https://www.python.org/downloads
 * Pip at https://pip.pypa.io/en/stable/installing/
+* venv at https://pypi.org/project/virtualenv/
 
 
 # Installation
-
-2 step : Getting the code and Module installation
 
 ## 1. Getting the code
 
@@ -36,7 +35,18 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 2. Click on "Code" (green button) and then "Download Zip"
 3. Un-zip the file and you're done !
 
-## 2. Module installation
+## 2. Setting up a virtual environement
+1. With the console command, navigate to the instalation folder
+2. Enter this command : ```virtual venv```
+3. Now that the virtual environoment is created, you need to activate it :
+
+   Windows : ```cd venv/Scripts``` puis ```activate```
+   
+   Linux : ```cd venv/bin``` puis ```activate```
+   
+4. You can now see the (venv) written at the very left of the line in the console command, signaling the success of the operation.
+
+## 3. Module installation
 
 1. Using the console, navigate where the file were un-zipped.
 2. Enter this command :
@@ -46,6 +56,8 @@ pip install -r requirements.txt
 Wait for all the modules to download and install.
 
 # Usage
+
+<b>WARNING :</b> Before starting the program, make sure your virtual environement is activated.
 
 In the console, navigate to where torga.py is located en enter :
 ```
