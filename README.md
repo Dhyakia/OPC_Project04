@@ -37,7 +37,7 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 
 ## 2. Setting up a virtual environement
 1. With the console command, navigate to the instalation folder
-2. Enter this command : ```virtual venv```
+2. Enter this command : ```virtualenv venv```
 3. Now that the virtual environoment is created, you need to activate it :
 
    Windows : ```cd venv/Scripts``` puis ```activate```
