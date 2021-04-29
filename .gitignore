@@ -1,0 +1,5 @@
+.vscode
+virtualEnv
+__pycache__
+save.json
+data.json
