@@ -14,9 +14,7 @@ It feature a very basic set of functionnality such as :
 # Requirements
 
 * Python3 at https://www.python.org/downloads
-* Pip at https://pip.pypa.io/en/stable/installing/
-* venv at https://pypi.org/project/virtualenv/
-
+* Pip at https://pip.pypa.io/en/stable/installing/ 
 
 # Installation
 
@@ -37,12 +35,16 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 
 ## 2. Setting up a virtual environement
 1. With the console command, navigate to the instalation folder
-2. Enter this command : ```virtualenv venv```
+2. To create the virtual environement, enter this command :
+
+   Windows : ```python3 -m venv c:\path\to\myenv```
+
+   MacOs/Linux : ```python3 -m venv env```
 3. Now that the virtual environoment is created, you need to activate it :
 
-   Windows : ```cd venv/Scripts``` puis ```activate```
+   Windows : ```cd myvenv/Scripts``` puis ```activate```
    
-   Linux : ```cd venv/bin``` puis ```activate```
+   MacOs/Linux : ```cd myvenv/bin``` puis ```activate```
    
 4. You can now see the (venv) written at the very left of the line in the console command, signaling the success of the operation.
 
