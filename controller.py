@@ -57,10 +57,9 @@ class Controller:
                     self.second_to_last_round_generator_resumed_games(rounds, tournaments_list)
                     self.enter_score(tournaments_list)
             self.end_of_tournament_table(tournaments_list)
-            self.tournament_to_database(tournaments_list[-1])
+            model.Tournament.tournament_to_database(tournaments_list[-1])
 
         elif user_input.lower() == "n":
-            # TODO get_new_tournament_data ne prend plus un liste en argument (pas sur)
             new_tournament_data = self.get_new_tournament_data()
             tournaments_list.append(new_tournament_data)
             self.get_8_players(players_list, tournaments_list)
@@ -73,7 +72,7 @@ class Controller:
                 self.second_to_last_round_generator(rounds, tournaments_list)
                 self.enter_score(tournaments_list)
             self.end_of_tournament_table(tournaments_list)
-            self.tournament_to_database(tournaments_list[-1])
+            model.Tournament.tournament_to_database(tournaments_list[-1])
 
         else:
             return None
@@ -145,10 +144,10 @@ class Controller:
         top_half_players = players_list_by_elo[:middle]
         bottom_half_players = players_list_by_elo[middle:]
 
-        match_01 = model.Match(top_half_players[0], bottom_half_players[0])
-        match_02 = model.Match(top_half_players[1], bottom_half_players[1])
-        match_03 = model.Match(top_half_players[2], bottom_half_players[2])
-        match_04 = model.Match(top_half_players[3], bottom_half_players[3])
+        match1 = model.Match(top_half_players[0], bottom_half_players[0])
+        match2 = model.Match(top_half_players[1], bottom_half_players[1])
+        match3 = model.Match(top_half_players[2], bottom_half_players[2])
+        match4 = model.Match(top_half_players[3], bottom_half_players[3])
 
         top_half_players[0].last_played = bottom_half_players[0].last_name + ' ' + bottom_half_players[0].first_name
         top_half_players[1].last_played = bottom_half_players[1].last_name + ' ' + bottom_half_players[1].first_name
@@ -161,11 +160,12 @@ class Controller:
 
         round_name = 'Round 1'
         start_time = self.get_time()
-        round = [match_01, match_02, match_03, match_04, round_name, start_time]
+        round = model.Round(match1, match2, match3, match4)
+        round.round_start_data(round_name, start_time)
         tournaments_list[-1].rounds_list.append(round)
 
         self.view.round_1_annoucement(start_time)
-        self.view.show_user_matchup(match_01, match_02, match_03, match_04)
+        self.view.show_user_matchup(round.match1, round.match2, round.match3, round.match4)
 
     def second_to_last_round_generator(self, rounds, tournaments_list):
         self.view.generating_matchs()
@@ -173,7 +173,7 @@ class Controller:
 
         players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
                                        key=lambda x: x.score, reverse=True)
-        round = []
+        round_matchs = []
         index = 1
         while len(players_list_by_score) != 0:
             last_name = players_list_by_score[index].last_name
@@ -185,24 +185,25 @@ class Controller:
 
                 del players_list_by_score[index + 1]
                 del players_list_by_score[0]
-                round.append(match)
+                round_matchs.append(match)
 
             if players_list_by_score[0].last_played != full_name:
                 match = (players_list_by_score[0], players_list_by_score[index])
 
                 del players_list_by_score[index]
                 del players_list_by_score[0]
-                round.append(match)
+                round_matchs.append(match)
 
         round_name = str(f'Round {rounds_count}')
         start_time = self.get_time()
-        round.append(round_name)
-        round.append(start_time)
+
+        round = model.Round(round_matchs[0], round_matchs[1], round_matchs[2], round_matchs[3])
+        round.round_start_data(round_name, start_time)
 
         tournaments_list[-1].rounds_list.append(round)
 
         self.view.round_second_to_last_annoucement(rounds_count, start_time)
-        self.view.show_user_matchup(round[0], round[1], round[2], round[3])
+        self.view.show_user_matchup(round.match1, round.match2, round.match3, round.match4)
 
     def second_to_last_round_generator_resumed_games(self, rounds, tournaments_list):
         self.view.generating_matchs()
@@ -210,7 +211,7 @@ class Controller:
 
         players_list_by_score = sorted(tournaments_list[-1].tournament_players_list,
                                        key=lambda x: x.score, reverse=True)
-        round = []
+        round_matchs = []
         index = 1
         while len(players_list_by_score) != 0:
             last_name = players_list_by_score[index].last_name
@@ -222,76 +223,77 @@ class Controller:
 
                 del players_list_by_score[index + 1]
                 del players_list_by_score[0]
-                round.append(match)
+                round_matchs.append(match)
 
             if players_list_by_score[0].last_played != full_name:
                 match = (players_list_by_score[0], players_list_by_score[index])
 
                 del players_list_by_score[index]
                 del players_list_by_score[0]
-                round.append(match)
+                round_matchs.append(match)
 
         round_name = str(f'Round {rounds_count}')
         start_time = self.get_time()
-        round.append(round_name)
-        round.append(start_time)
 
+        round = model.Round(round_matchs[0], round_matchs[1], round_matchs[2], round_matchs[3])
+        round.round_start_data(round_name, start_time)
         tournaments_list[-1].rounds_list.append(round)
 
         self.view.round_second_to_last_annoucement(rounds_count, start_time)
-        self.view.show_user_matchup(round[0], round[1], round[2], round[3])
+        self.view.show_user_matchup(round.match1, round.match2, round.match3, round.match4)
 
     def enter_score(self, tournaments_list):
         self.view.enter_score_instructions()
         match_count = 0
 
         while match_count < 4:
-            match_result = self.view.ask_user_match_result((match_count + 1))
-            if match_result == "0":
-                player_1_last_name = tournaments_list[-1].rounds_list[-1][match_count][0].last_name
-                player_1_first_name = tournaments_list[-1].rounds_list[-1][match_count][0].first_name
-                player_2_last_name = tournaments_list[-1].rounds_list[-1][match_count][1].last_name
-                player_2_first_name = tournaments_list[-1].rounds_list[-1][match_count][1].first_name
-                for index, name in enumerate(tournaments_list[-1].tournament_players_list):
-                    if name.last_name == player_1_last_name and name.first_name == player_1_first_name:
-                        tournaments_list[-1].tournament_players_list[index].score += 0.5
-                    elif name.last_name == player_2_last_name and name.first_name == player_2_first_name:
-                        tournaments_list[-1].tournament_players_list[index].score += 0.5
-                        match_count += 1
-                        self.view.draw(match_count)
+            # TODO I don't get how to iterate trought round there.
+                match_result = self.view.ask_user_match_result((match_count + 1))
+                if match_result == "0":
+                    player_1_last_name = match.player1.last_name
+                    player_1_first_name = match.player1.first_name
+                    player_2_last_name = match.player2.last_name
+                    player_2_first_name = match.player2.first_name
+                    for index, name in enumerate(tournaments_list[-1].tournament_players_list):
+                        if name.last_name == player_1_last_name and name.first_name == player_1_first_name:
+                            tournaments_list[-1].tournament_players_list[index].score += 0.5
+                        elif name.last_name == player_2_last_name and name.first_name == player_2_first_name:
+                            tournaments_list[-1].tournament_players_list[index].score += 0.5
+                            match_count += 1
+                            self.view.draw(match_count)
 
-            elif match_result == "1":
-                last_name = tournaments_list[-1].rounds_list[-1][match_count][0].last_name
-                first_name = tournaments_list[-1].rounds_list[-1][match_count][0].first_name
-                for index, name in enumerate(tournaments_list[-1].tournament_players_list):
-                    if name.last_name == last_name and name.first_name == first_name:
-                        tournaments_list[-1].tournament_players_list[index].score += 1
-                        match_count += 1
-                        self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
-                                               tournaments_list[-1].tournament_players_list[index].last_name)
+                elif match_result == "1":
+                    last_name = match.player1.last_name
+                    first_name = match.player1.first_name
+                    for index, name in enumerate(tournaments_list[-1].tournament_players_list):
+                        if name.last_name == last_name and name.first_name == first_name:
+                            tournaments_list[-1].tournament_players_list[index].score += 1
+                            match_count += 1
+                            self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
+                                                tournaments_list[-1].tournament_players_list[index].last_name)
 
-            elif match_result == "2":
-                last_name = tournaments_list[-1].rounds_list[-1][match_count][1].last_name
-                first_name = tournaments_list[-1].rounds_list[-1][match_count][1].first_name
-                for index, name in enumerate(tournaments_list[-1].tournament_players_list):
-                    if name.last_name == last_name and name.first_name == first_name:
-                        tournaments_list[-1].tournament_players_list[index].score += 1
-                        match_count += 1
-                        self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
-                                               tournaments_list[-1].tournament_players_list[index].last_name)
+                elif match_result == "2":
+                    last_name = match.player2.last_name
+                    first_name = match.player2.first_name
+                    for index, name in enumerate(tournaments_list[-1].tournament_players_list):
+                        if name.last_name == last_name and name.first_name == first_name:
+                            tournaments_list[-1].tournament_players_list[index].score += 1
+                            match_count += 1
+                            self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
+                                                tournaments_list[-1].tournament_players_list[index].last_name)
 
-            elif match_result.lower() == "save":
-                model.save_table.truncate()
-                self.tournament_to_database_save(tournaments_list[-1])
-                self.view.tournament_is_saved(tournaments_list[-1].name)
-                self.view.goodbye()
-                exit()
+                elif match_result.lower() == "save":
+                    model.save_table.truncate()
+                    model.Tournament.tournament_to_database_save(tournaments_list[-1])
+                    self.view.tournament_is_saved(tournaments_list[-1].name)
+                    self.view.goodbye()
+                    exit()
 
-            else:
-                self.view.enter_score_instructions_help()
+                else:
+                    self.view.enter_score_instructions_help()
 
         end_time = self.get_time()
-        tournaments_list[-1].rounds_list[-1].append(end_time)
+        tournaments_list[-1].rounds_list[-1].end = end_time
         self.view.end_of_round_time(end_time)
 
     def end_of_tournament_table(self, tournaments_list):
@@ -475,90 +477,6 @@ class Controller:
                 if name.name == tournament_target:
                     user_input = self.view.ask_alpha_or_rank()
                     self.show_all_players(user_input, tournaments_list[index].tournament_players_list)
-
-    def tournament_to_database(self, tournament_to_database):
-        serialiazed_tournament = {
-            'Name': tournament_to_database.name,
-            'Location': tournament_to_database.location,
-            'Date': tournament_to_database.date,
-            'Duration': tournament_to_database.duration,
-            'Number_of_turns': tournament_to_database.number_of_turns,
-            'Speed': tournament_to_database.speed,
-            'Tournament_info': tournament_to_database.tournament_info,
-            'Tournaments_players': model.Player.tourmanent_player_list_serializer(
-                tournament_to_database.tournament_players_list),
-            'Tournaments_rounds': self.tournament_rounds_list_serializer(
-                tournament_to_database.rounds_list)
-        }
-
-        model.tournaments_table.insert(serialiazed_tournament)
-
-    def tournament_to_database_save(self, tournament_to_database):
-        serialiazed_tournament = {
-            'Name': tournament_to_database.name,
-            'Location': tournament_to_database.location,
-            'Date': tournament_to_database.date,
-            'Duration': tournament_to_database.duration,
-            'Number_of_turns': tournament_to_database.number_of_turns,
-            'Speed': tournament_to_database.speed,
-            'Tournament_info': tournament_to_database.tournament_info,
-            'Tournaments_players': self.tourmanent_player_list_serializer_save(
-                tournament_to_database.tournament_players_list),
-            'Tournaments_rounds': self.tournament_rounds_list_serializer(
-                tournament_to_database.rounds_list)
-        }
-
-        model.save_table.insert(serialiazed_tournament)
-
-    def tourmanent_player_list_serializer_save(self, tournament_player_list):
-        player_data = []
-        for player in tournament_player_list:
-            last_name = player.last_name
-            first_name = player.first_name
-            date_of_birth = player.date_of_birth
-            gender = player.gender
-            elo = player.elo
-            score = player.score
-            last_played = player.last_played
-
-            player = [last_name, first_name, date_of_birth, gender, elo, score, last_played]
-            player_data.append(player)
-
-        return player_data
-
-    def tournament_rounds_list_serializer(self, tournament_rounds_list):
-        round_data = []
-        for round in tournament_rounds_list:
-            match_1 = self.tournament_rounds_list_players_serializer(round[0])
-            match_2 = self.tournament_rounds_list_players_serializer(round[1])
-            match_3 = self.tournament_rounds_list_players_serializer(round[2])
-            match_4 = self.tournament_rounds_list_players_serializer(round[3])
-
-            round_name = round[4]
-            round_start = round[5]
-            try:
-                round_end = round[6]
-            except IndexError:
-                round_end = ''
-
-            round = [match_1, match_2, match_3, match_4, round_name, round_start, round_end]
-            round_data.append(round)
-
-        return round_data
-
-    def tournament_rounds_list_players_serializer(self, match):
-        players_data = []
-        for player in match:
-            last_name = player.last_name
-            first_name = player.first_name
-            date_of_birth = player.date_of_birth
-            gender = player.gender
-            elo = player.elo
-
-            player = (last_name, first_name, date_of_birth, gender, elo)
-            players_data.append(player)
-
-        return players_data
 
     @staticmethod
     def get_time():
