@@ -370,7 +370,7 @@ class Controller:
 
     def show_data_list(self, user_view, players_list, tournaments_list):
 
-        if user_view.lower() == "p":
+        if user_view.lower() == "p": 
             alpha_or_rank = self.view.ask_alpha_or_rank()
             self.show_all_players(alpha_or_rank, players_list)
 
@@ -455,9 +455,9 @@ class Controller:
             for index, name in enumerate(tournaments_list):
                 if name.name == tournament_target:
                     for round_data in tournaments_list[index].rounds_list:
-                        round_name = round_data[4]
-                        round_start = round_data[5]
-                        round_end = round_data[6]
+                        round_name = round_data.name
+                        round_start = round_data.start
+                        round_end = round_data.end
                         self.view.round_info_table(round_name, round_start, round_end)
 
         elif matchs >= 0:

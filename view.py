@@ -179,7 +179,7 @@ class View:
     def show_all_matchs(self, round):
         print('')
         print(f'{round.name}')
-        for index, match in enumarate(round):
+        for index, match in enumerate(round.matchs_list):
             print(f'Match{index + 1}: {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}')
         print('')
 
