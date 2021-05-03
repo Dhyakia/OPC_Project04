@@ -114,12 +114,10 @@ class View:
     def generating_matchs(self):
         print('generating matchs ...')
 
-    def show_user_matchup(self, match1, match2, match3, match4):
+    def show_user_matchup(self, matchs_list):
         print('')
-        print(f'Match 1: {match1.player1.last_name} {match1.player1.first_name} VS {match1.player2.last_name} {match1.player2.first_name}')
-        print(f'Match 2: {match2.player1.last_name} {match2.player1.first_name} VS {match2.player2.last_name} {match2.player2.first_name}')
-        print(f'Match 3: {match3.player1.last_name} {match3.player1.first_name} VS {match3.player2.last_name} {match3.player2.first_name}')
-        print(f'Match 4: {match4.player1.last_name} {match4.player1.first_name} VS {match4.player2.last_name} {match4.player2.first_name}')
+        for index, match in enumerate(matchs_list):
+            print(f'Match {index + 1}: {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}')
         print('')
 
     def ask_user_match_result(self, match_count):
@@ -178,13 +176,11 @@ class View:
         print(f'Name:{name}, start:{start}, end:{end}')
         print('')
 
-    def show_all_matchs(self, round_name, match1, match2, match3, match4):
+    def show_all_matchs(self, round):
         print('')
-        print(f'{round_name}')
-        print(f'Match1: {match1[0].last_name} {match1[0].first_name} VS {match1[1].last_name} {match1[1].first_name}')
-        print(f'Match2: {match2[0].last_name} {match2[0].first_name} VS {match2[1].last_name} {match2[1].first_name}')
-        print(f'Match3: {match3[0].last_name} {match3[0].first_name} VS {match3[1].last_name} {match3[1].first_name}')
-        print(f'Match4: {match4[0].last_name} {match4[0].first_name} VS {match4[1].last_name} {match4[1].first_name}')
+        print(f'{round.name}')
+        for index, match in enumarate(round):
+            print(f'Match{index + 1}: {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}')
         print('')
 
     def tournament_is_saved(self, tournament_name):

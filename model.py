@@ -22,21 +22,21 @@ class Player:
     def database_to_players_list(cls, serialiazed_players):
         players_list = []
         all_serialized_player = list(serialiazed_players)
-        for player in all_serialized_player:
-            # TODO This can't be right
-            player_data = cls.player_deserializer(Player, player)
-            players_list.append(player_data)
+        for player_data in all_serialized_player:
+            player = cls.player_deserializer(player_data)
+            players_list.append(player)
 
         return players_list
 
-    def player_deserializer(self, serialiazed_player):
+    @classmethod
+    def player_deserializer(cls, serialiazed_player):
             last_name = serialiazed_player['Last_name']
             first_name = serialiazed_player['First_name']
             date_of_birth = serialiazed_player['Birthdate']
             gender = serialiazed_player['Gender']
             elo = serialiazed_player['Elo']
 
-            player = Player(last_name, first_name, date_of_birth, gender, elo)
+            player = cls(last_name, first_name, date_of_birth, gender, elo)
             return player
 
     @classmethod
@@ -70,8 +70,9 @@ class Player:
 
         players_table.insert(serialiazed_player)
 
-    def database_to_tournaments_list_players_list_format(self, tournaments_players_list_serialized):
-        players_data = []
+    @classmethod
+    def database_to_tournaments_list_players_list_format(cls, tournaments_players_list_serialized):
+        players_list = []
         for player in tournaments_players_list_serialized:
             last_name = player[0]
             first_name = player[1]
@@ -79,39 +80,36 @@ class Player:
             gender = player[3]
             elo = player[4]
 
-            players_data.append(Player(last_name, first_name, date_of_birth, gender, elo))
+            players_list.append(cls(last_name, first_name, date_of_birth, gender, elo))
 
-        return players_data
+        return players_list
 
     def tourmanent_player_list_serializer_save(self, tournament_player_list):
         player_data = []
         for player in tournament_player_list:
-            last_name = player.last_name
-            first_name = player.first_name
-            date_of_birth = player.date_of_birth
-            gender = player.gender
-            elo = player.elo
-            score = player.score
-            last_played = player.last_played
+            last_name = self.last_name
+            first_name = self.first_name
+            date_of_birth = self.date_of_birth
+            gender = self.gender
+            elo = self.elo
+            score = self.score
+            last_played = self.last_played
 
             player = [last_name, first_name, date_of_birth, gender, elo, score, last_played]
             player_data.append(player)
 
         return player_data
 
-    def tournament_rounds_list_players_serializer(self, match):
-        players_data = []
-        for player in match:
-            last_name = player.last_name
-            first_name = player.first_name
-            date_of_birth = player.date_of_birth
-            gender = player.gender
-            elo = player.elo
+    def tournament_rounds_list_players_serializer(self):
 
-            player = (last_name, first_name, date_of_birth, gender, elo)
-            players_data.append(player)
+        last_name = self.last_name
+        first_name = self.first_name
+        date_of_birth = self.date_of_birth
+        gender = self.gender
+        elo = self.elo
 
-        return players_data
+        player = (last_name, first_name, date_of_birth, gender, elo)
+        return player
 
 
 class Tournament:
@@ -135,12 +133,13 @@ class Tournament:
         tournaments_list = []
         all_serialized_tournament = list(serialiazed_tournaments)
         for tournament in all_serialized_tournament:
-            tournament_data = cls.tournament_data_deserializer(Tournament, tournament)
+            tournament_data = cls.tournament_data_deserializer(tournament)
             tournaments_list.append(tournament_data)
 
         return tournaments_list
 
-    def tournament_data_deserializer(self, serialized_tournament):
+    @classmethod
+    def tournament_data_deserializer(cls, serialized_tournament):
             name = serialized_tournament['Name']
             location = serialized_tournament['Location']
             date = serialized_tournament['Date']
@@ -158,19 +157,17 @@ class Tournament:
 
             return tournament
 
-    def tournament_to_database(self, tournament_to_database):
+    def tournament_to_database(self):
         serialiazed_tournament = {
-            'Name': tournament_to_database.name,
-            'Location': tournament_to_database.location,
-            'Date': tournament_to_database.date,
-            'Duration': tournament_to_database.duration,
-            'Number_of_turns': tournament_to_database.number_of_turns,
-            'Speed': tournament_to_database.speed,
-            'Tournament_info': tournament_to_database.tournament_info,
-            'Tournaments_players': Player.tourmanent_player_list_serializer(
-                tournament_to_database.tournament_players_list),
-            'Tournaments_rounds': Round.tournament_rounds_list_serializer(
-                tournament_to_database.rounds_list)
+            'Name': self.name,
+            'Location': self.location,
+            'Date': self.date,
+            'Duration': self.duration,
+            'Number_of_turns': self.number_of_turns,
+            'Speed': self.speed,
+            'Tournament_info': self.tournament_info,
+            'Tournaments_players': Player.tourmanent_player_list_serializer(self.tournament_players_list),
+            'Tournaments_rounds': Round.tournament_rounds_list_serializer(self.rounds_list)
         }
 
         tournaments_table.insert(serialiazed_tournament)
@@ -206,11 +203,8 @@ class Tournament:
 
 class Round:
 
-    def __init__(self, match1, match2, match3, match4):
-        self.match1 = match_list[0]
-        self.match2 = match_list[1]
-        self.match3 = match_list[2]
-        self.match4 = match_list[3]
+    def __init__(self, matchs_list):
+        self.matchs_list = matchs_list
 
     def round_start_data(self, round_name, round_start_time):
         self.name = round_name
@@ -230,35 +224,45 @@ class Round:
             round_start = rounds[5]
             round_end = rounds[6]
 
-            round = Round(match1, match2, match3, match4)
+            round = Round([match1, match2, match3, match4])
             round.round_start_data(round_name, round_start)
             round.round_end_data(round_end)
             rounds_data.append(round)
 
         return rounds_data
 
-    def tournament_rounds_list_serializer(self, tournament_rounds_list):
-        round_data = []
-        for round in tournament_rounds_list:
-            match_1 = Player.tournament_rounds_list_players_serializer(round[0])
-            match_2 = Player.tournament_rounds_list_players_serializer(round[1])
-            match_3 = Player.tournament_rounds_list_players_serializer(round[2])
-            match_4 = Player.tournament_rounds_list_players_serializer(round[3])
+    def tournament_rounds_list_serializer(tournament_rounds_list):
+        rounds_data = []
+        for a_round in tournament_rounds_list:
+            a_round_list = []
+            for a_match in a_round.matchs_list:
+                match = Match.match_player_serializer(a_match)
+                a_round_list.append(match)
 
-            round_name = round[4]
-            round_start = round[5]
+            round_name = a_round.name
+            a_round_list.append(round_name)
+
+            round_start = a_round.start
+            a_round_list.append(round_start)
             try:
-                round_end = round[6]
+                round_end = a_round.end
+                a_round_list.append(round_end)
             except IndexError:
                 round_end = ''
 
-            round = [match_1, match_2, match_3, match_4, round_name, round_start, round_end]
-            round_data.append(round)
+            rounds_data.append(a_round_list)
 
-        return round_data
+        return rounds_data
 
 class Match:
 
     def __init__(self, player1, player2):
         self.player1 = player1
         self.player2 = player2
+
+    def match_player_serializer(self):
+        player1 = Player.tournament_rounds_list_players_serializer(self.player1)
+        player2 = Player.tournament_rounds_list_players_serializer(self.player2)
+
+        match = [player1, player2]
+        return match
