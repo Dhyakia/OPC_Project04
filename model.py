@@ -30,14 +30,14 @@ class Player:
 
     @classmethod
     def player_deserializer(cls, serialiazed_player):
-            last_name = serialiazed_player['Last_name']
-            first_name = serialiazed_player['First_name']
-            date_of_birth = serialiazed_player['Birthdate']
-            gender = serialiazed_player['Gender']
-            elo = serialiazed_player['Elo']
+        last_name = serialiazed_player['Last_name']
+        first_name = serialiazed_player['First_name']
+        date_of_birth = serialiazed_player['Birthdate']
+        gender = serialiazed_player['Gender']
+        elo = serialiazed_player['Elo']
 
-            player = cls(last_name, first_name, date_of_birth, gender, elo)
-            return player
+        player = cls(last_name, first_name, date_of_birth, gender, elo)
+        return player
 
     @classmethod
     def tourmanent_player_list_serializer(cls, tournament_player_list):
@@ -97,16 +97,17 @@ class Player:
 
         return player
 
-    def tourmanent_player_list_serializer_save(self, tournament_player_list):
+    @classmethod
+    def tourmanent_player_list_serializer_save(cls, tournament_players_list):
         player_data = []
-        for player in tournament_player_list:
-            last_name = self.last_name
-            first_name = self.first_name
-            date_of_birth = self.date_of_birth
-            gender = self.gender
-            elo = self.elo
-            score = self.score
-            last_played = self.last_played
+        for player in tournament_players_list:
+            last_name = player.last_name
+            first_name = player.first_name
+            date_of_birth = player.date_of_birth
+            gender = player.gender
+            elo = player.elo
+            score = player.score
+            last_played = player.last_played
 
             player = [last_name, first_name, date_of_birth, gender, elo, score, last_played]
             player_data.append(player)
@@ -153,22 +154,22 @@ class Tournament:
 
     @classmethod
     def tournament_data_deserializer(cls, serialized_tournament):
-            name = serialized_tournament['Name']
-            location = serialized_tournament['Location']
-            date = serialized_tournament['Date']
-            duration = serialized_tournament['Duration']
-            number_of_turns = serialized_tournament['Number_of_turns']
-            speed = serialized_tournament['Speed']
-            tournament_info = serialized_tournament['Tournament_info']
-            tournament_players = Player.database_to_tournaments_list_players_list_format(
-                serialized_tournament['Tournaments_players'])
-            tournament_rounds = Round.database_to_tournaments_list_rounds_list_format(
-                serialized_tournament['Tournaments_rounds'])   
+        name = serialized_tournament['Name']
+        location = serialized_tournament['Location']
+        date = serialized_tournament['Date']
+        duration = serialized_tournament['Duration']
+        number_of_turns = serialized_tournament['Number_of_turns']
+        speed = serialized_tournament['Speed']
+        tournament_info = serialized_tournament['Tournament_info']
+        tournament_players = Player.database_to_tournaments_list_players_list_format(
+            serialized_tournament['Tournaments_players'])
+        tournament_rounds = Round.database_to_tournaments_list_rounds_list_format(
+            serialized_tournament['Tournaments_rounds'])
 
-            tournament = cls(name, location, date, duration, number_of_turns, speed, tournament_info,
-                             tournament_players, tournament_rounds)
+        tournament = cls(name, location, date, duration, number_of_turns, speed, tournament_info,
+                         tournament_players, tournament_rounds)
 
-            return tournament
+        return tournament
 
     def tournament_to_database(self):
         serialiazed_tournament = {
@@ -189,26 +190,26 @@ class Tournament:
     def saved_tournament_to_memory(cls, serialiazed_tournaments):
         all_serialized_tournament = list(serialiazed_tournaments)
         for tournament in all_serialized_tournament:
-            tournament_data = cls.tournament_data_deserializer(Tournament, tournament)
+            tournament_data = cls.tournament_data_deserializer(tournament)
 
         try:
             return tournament_data
         except UnboundLocalError:
             pass
 
-    def tournament_to_database_save(self, tournament_to_database):
+    def tournament_to_database_save(self):
         serialiazed_tournament = {
-            'Name': tournament_to_database.name,
-            'Location': tournament_to_database.location,
-            'Date': tournament_to_database.date,
-            'Duration': tournament_to_database.duration,
-            'Number_of_turns': tournament_to_database.number_of_turns,
-            'Speed': tournament_to_database.speed,
-            'Tournament_info': tournament_to_database.tournament_info,
+            'Name': self.name,
+            'Location': self.location,
+            'Date': self.date,
+            'Duration': self.duration,
+            'Number_of_turns': self.number_of_turns,
+            'Speed': self.speed,
+            'Tournament_info': self.tournament_info,
             'Tournaments_players': Player.tourmanent_player_list_serializer_save(
-                tournament_to_database.tournament_players_list),
+                self.tournament_players_list),
             'Tournaments_rounds': Round.tournament_rounds_list_serializer(
-                tournament_to_database.rounds_list)
+                self.rounds_list)
         }
 
         save_table.insert(serialiazed_tournament)
@@ -235,7 +236,11 @@ class Round:
             match4 = Match.match_player_deserializer(rounds[3])
             round_name = rounds[4]
             round_start = rounds[5]
-            round_end = rounds[6]
+
+            try:
+                round_end = rounds[6]
+            except IndexError:
+                round_end = ""
 
             round = Round([match1, match2, match3, match4])
             round.round_start_data(round_name, round_start)
@@ -260,12 +265,13 @@ class Round:
             try:
                 round_end = a_round.end
                 a_round_list.append(round_end)
-            except IndexError:
+            except AttributeError:
                 round_end = ''
 
             rounds_data.append(a_round_list)
 
         return rounds_data
+
 
 class Match:
 

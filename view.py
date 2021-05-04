@@ -117,7 +117,11 @@ class View:
     def show_user_matchup(self, matchs_list):
         print('')
         for index, match in enumerate(matchs_list):
-            print(f'Match {index + 1}: {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}')
+            output = (
+                f"""Match {index + 1}:
+        {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}"""
+            )
+            print(output)
         print('')
 
     def ask_user_match_result(self, match_count):
@@ -180,7 +184,11 @@ class View:
         print('')
         print(f'{round.name}')
         for index, match in enumerate(round.matchs_list):
-            print(f'Match{index + 1}: {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}')
+            output = (
+                f"""Match {index + 1}:
+        {match.player1.last_name} {match.player1.first_name} VS {match.player2.last_name} {match.player2.first_name}"""
+            )
+            print(output)
         print('')
 
     def tournament_is_saved(self, tournament_name):

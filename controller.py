@@ -41,9 +41,7 @@ class Controller:
             self.view.show_user_loading_successful(tournaments_list[-1].name)
 
             self.view.show_all_matchs(
-                tournaments_list[-1].rounds_list[-1][4], tournaments_list[-1].rounds_list[-1][0],
-                tournaments_list[-1].rounds_list[-1][1], tournaments_list[-1].rounds_list[-1][2],
-                tournaments_list[-1].rounds_list[-1][3])
+                tournaments_list[-1].rounds_list[-1])
             self.enter_score(tournaments_list)
 
             loop = len(tournaments_list[-1].rounds_list)
@@ -271,7 +269,7 @@ class Controller:
                             tournaments_list[-1].tournament_players_list[index].score += 1
                             match_count += 1
                             self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
-                                                tournaments_list[-1].tournament_players_list[index].last_name)
+                                                   tournaments_list[-1].tournament_players_list[index].last_name)
 
                 elif match_result == "2":
                     last_name = match.player2.last_name
@@ -281,7 +279,7 @@ class Controller:
                             tournaments_list[-1].tournament_players_list[index].score += 1
                             match_count += 1
                             self.view.a_player_won(tournaments_list[-1].tournament_players_list[index].first_name,
-                                                tournaments_list[-1].tournament_players_list[index].last_name)
+                                                   tournaments_list[-1].tournament_players_list[index].last_name)
 
                 elif match_result.lower() == "save":
                     model.save_table.truncate()
@@ -370,7 +368,7 @@ class Controller:
 
     def show_data_list(self, user_view, players_list, tournaments_list):
 
-        if user_view.lower() == "p": 
+        if user_view.lower() == "p":
             alpha_or_rank = self.view.ask_alpha_or_rank()
             self.show_all_players(alpha_or_rank, players_list)
 
@@ -479,4 +477,3 @@ class Controller:
         now = datetime.datetime.now()
         full_now = now.strftime("%d/%m/%Y %H:%M:%S")
         return full_now
- 
