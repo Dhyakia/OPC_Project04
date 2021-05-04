@@ -161,8 +161,10 @@ class Controller:
         round.round_start_data(round_name, start_time)
         tournaments_list[-1].rounds_list.append(round)
 
-        self.view.round_1_annoucement(start_time)
+        model.save_table.truncate()
+        model.Tournament.tournament_to_database_save(tournaments_list[-1])
 
+        self.view.round_1_annoucement(start_time)
         self.view.show_user_matchup(round.matchs_list)
 
     def second_to_last_round_generator(self, rounds, tournaments_list):
@@ -199,6 +201,8 @@ class Controller:
         round.round_start_data(round_name, start_time)
 
         tournaments_list[-1].rounds_list.append(round)
+        model.save_table.truncate()
+        model.Tournament.tournament_to_database_save(tournaments_list[-1])
 
         self.view.round_second_to_last_annoucement(rounds_count, start_time)
         self.view.show_user_matchup(round.matchs_list)

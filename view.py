@@ -133,11 +133,10 @@ class View:
         print("Enter 0 for a draw, 1 if player1 won and 2 if player2 won")
 
     def enter_score_instructions_help(self):
-        print("Enter 0 for a draw, 1 if player_01 won and 2 if player_2 won")
-        print("Exemple :")
-        print("Match 1: X vs Y")
-        print("Match 1 resultat: 1")
-        print("X won")
+        print('')
+        print("Enter 0 for a draw, 1 if player1 won and 2 if player2 won.")
+        print("Optionally, you can enter 'save' to save the tournament.")
+        print('')
 
     def a_player_won(self, player_last_name, player_first_name):
         print(f"{player_last_name} {player_first_name} won")
