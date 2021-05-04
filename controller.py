@@ -46,8 +46,9 @@ class Controller:
 
             loop = len(tournaments_list[-1].rounds_list)
             number_of_rounds = tournaments_list[-1].number_of_turns
-            for rounds in range(number_of_rounds):
-                if rounds <= loop:
+            number_of_loop = int(number_of_rounds)
+            for rounds in range(number_of_loop):
+                if rounds < loop:
                     pass
                 else:
                     self.second_to_last_round_generator_resumed_games(rounds, tournaments_list)
@@ -237,7 +238,8 @@ class Controller:
 
         tournaments_list[-1].rounds_list.append(round)
 
-        self.view.round_second_to_last_annoucement(rounds_count, start_time)
+        round_count_name = rounds_count + 1
+        self.view.round_second_to_last_annoucement(round_count_name, start_time)
         self.view.show_user_matchup(round.matchs_list)
 
     def enter_score(self, tournaments_list):
