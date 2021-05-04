@@ -65,7 +65,7 @@ In the console, navigate to where torga.py is located en enter :
 ```
 python torga.py
 ```
-
+To save a tournament, type `save` when asked to enter a score. This will save the tournament for later.
 
 # Generate a new flake8-html
 
