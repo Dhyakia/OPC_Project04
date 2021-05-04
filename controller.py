@@ -54,6 +54,7 @@ class Controller:
                     self.second_to_last_round_generator_resumed_games(rounds, tournaments_list)
                     self.enter_score(tournaments_list)
             self.end_of_tournament_table(tournaments_list)
+            model.save_table.truncate()
             model.Tournament.tournament_to_database(tournaments_list[-1])
 
         elif user_input.lower() == "n":
@@ -69,6 +70,7 @@ class Controller:
                 self.second_to_last_round_generator(rounds, tournaments_list)
                 self.enter_score(tournaments_list)
             self.end_of_tournament_table(tournaments_list)
+            model.save_table.truncate()
             tournaments_list[-1].tournament_to_database()
 
         else:
