@@ -4,17 +4,20 @@ import datetime
 
 
 class Controller:
+    """The controller operate the logic of the program."""
 
     def __init__(self):
+        """Initialization of the view and start of the main method."""
+
         self.view = view.View()
         self.main()
 
     def main(self):
         """
-        Program main loop.
+        Main program loop.
 
-        Start by initializing data from the json's into variable,
-        then take user input to direct to designated method.
+        Initialize data from json into variables.
+        Navigate trought method based of user input
         """
 
         flow = True
@@ -41,7 +44,13 @@ class Controller:
                 flow = False
 
     def tournament_logic(self, user_input, players_list, tournaments_list, saved_game):
-        """ Main tournament logic loop."""
+        """
+        Main tournament method.
+
+        Either resume a saved tournament or start a new one based on user input.
+        Then play the tournament until its end.
+        """
+
         if user_input.lower() == "r":
             self.view.show_user_loading(saved_game.name)
 
@@ -85,7 +94,8 @@ class Controller:
             return None
 
     def get_new_tournament_data(self):
-        """Takes user input. Return a Tournament object"""
+        """Takes multiples user input, return a tournament object with said input."""
+
         tournament_name = self.view.ask_tournament_name()
         tournament_location = self.view.ask_tournament_location()
 
@@ -121,6 +131,8 @@ class Controller:
         return new_tournamment
 
     def get_8_players(self, players_list, tournaments_list):
+        """Gather user input to enter existing player into a tournament."""
+
         while len(tournaments_list[-1].tournament_players_list) < model.Tournament.NUMBER_OF_TOURNAMENT_PLAYER:
             try:
                 player_entering_tournament = self.view.ask_player_full_name()
@@ -144,6 +156,8 @@ class Controller:
         self.view.tournament_can_start()
 
     def first_round_generator(self, tournaments_list):
+        """Generate the first round of a tournament."""
+
         self.view.generating_first_turn_matchs()
         players_list_by_elo = sorted(tournaments_list[-1].tournament_players_list,
                                      key=lambda x: x.elo, reverse=True)
@@ -179,6 +193,8 @@ class Controller:
         self.view.show_user_matchup(round.matchs_list)
 
     def second_to_last_round_generator(self, rounds, tournaments_list):
+        """Generate a round, from the second one to the last."""
+
         self.view.generating_matchs()
         rounds_count = (rounds + 2)
 
@@ -219,6 +235,8 @@ class Controller:
         self.view.show_user_matchup(round.matchs_list)
 
     def second_to_last_round_generator_resumed_games(self, rounds, tournaments_list):
+        """Generate a round, from the second one to the last. Formated for resumed games."""
+
         self.view.generating_matchs()
         rounds_count = int(rounds)
 
@@ -258,6 +276,8 @@ class Controller:
         self.view.show_user_matchup(round.matchs_list)
 
     def enter_score(self, tournaments_list):
+        """Takes an user input to define a winner and add point(s)."""
+
         self.view.enter_score_instructions()
         match_count = 0
 
@@ -313,6 +333,8 @@ class Controller:
         self.view.end_of_round_time(end_time)
 
     def end_of_tournament_table(self, tournaments_list):
+        """"Gather data from each players in a tournament and show it to the user."""
+
         tplayer_1 = [tournaments_list[-1].tournament_players_list[0].first_name,
                      tournaments_list[-1].tournament_players_list[0].last_name,
                      tournaments_list[-1].tournament_players_list[0].score]
@@ -351,6 +373,8 @@ class Controller:
         return None
 
     def add_player(self, players_list):
+        """Takes user input, create a player object with said input and add it into the player_list."""
+
         player_last_name = self.view.ask_player_last_name()
         player_first_name = self.view.ask_player_first_name()
 
@@ -384,6 +408,7 @@ class Controller:
         return None
 
     def show_data_list(self, user_view, players_list, tournaments_list):
+        """Guide user to different method based on input."""
 
         if user_view.lower() == "p":
             alpha_or_rank = self.view.ask_alpha_or_rank()
@@ -399,6 +424,8 @@ class Controller:
             pass
 
     def show_all_tournaments_table(self, tournaments_list):
+        """Gather data from all the tournamend and send them to the view."""
+
         table = []
         for tournament in tournaments_list:
             name = tournament.name
@@ -416,6 +443,7 @@ class Controller:
         self.view.all_tournaments_table(tournament_data_sorted)
 
     def show_all_players(self, alpha_or_rank, players_list):
+        """Send data to the view to show all the players. Get ordered based on input."""
         user_input = alpha_or_rank
         table = []
 
@@ -438,6 +466,8 @@ class Controller:
             self.view.all_player_table(all_player_sorted_by_rank)
 
     def show_all_players_in_tournament(self, alpha_or_rank, players_list):
+        """Send data to the view to show all the players inside a tournament. Get ordered based on input."""
+
         user_input = alpha_or_rank
         table = []
 
@@ -460,6 +490,8 @@ class Controller:
             self.view.all_player_table(all_player_sorted_by_rank)
 
     def show_data_inside_tournament(self, user_view, tournaments_list):
+        """Send data to the view, based on user input."""
+
         data = user_view
         rounds = data.find(" -r")
         matchs = data.find(" -m")
@@ -491,6 +523,8 @@ class Controller:
 
     @staticmethod
     def get_time():
+        """Gets a full date and return it."""
+
         now = datetime.datetime.now()
         full_now = now.strftime("%d/%m/%Y %H:%M:%S")
         return full_now
