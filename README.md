@@ -37,14 +37,14 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 1. With the console command, navigate to the instalation folder
 2. To create the virtual environement, enter this command :
 
-   Windows : ```python3 -m venv c:\path\to\myenv```
+   Windows : ```python3 -m venv c:\path\to\venv```
 
-   MacOs/Linux : ```python3 -m venv env```
+   MacOs/Linux : ```python3 -m venv venv```
 3. Now that the virtual environoment is created, you need to activate it :
 
-   Windows : ```cd myvenv/Scripts``` puis ```activate```
+   Windows : ```cd venv/Scripts``` puis ```activate```
    
-   MacOs/Linux : ```cd myvenv/bin``` puis ```activate```
+   MacOs/Linux : ```cd venv/bin``` puis ```activate```
    
 4. You can now see the (venv) written at the very left of the line in the console command, signaling the success of the operation.
 
@@ -61,9 +61,9 @@ Wait for all the modules to download and install.
 
 <b>WARNING :</b> Before starting the program, make sure your virtual environement is activated.
 
-In the console, navigate to where torga.py is located en enter :
+In the console, navigate the installation folder :
 ```
-python torga.py
+python -m 
 ```
 To save a tournament, type `save` when asked to enter a score. This will save the tournament for later.
 
@@ -71,7 +71,7 @@ To save a tournament, type `save` when asked to enter a score. This will save th
 
 To generate a new flake8 report, paste this line into your console :
 ```
-flake8 --format=html --htmldir=flake8_rapport --max-line-length=119 --filename=*.py --exclude=.\venv\
+flake8 --config setup.cfg
 ```
 
 
