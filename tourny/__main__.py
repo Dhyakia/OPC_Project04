@@ -1,4 +1,4 @@
-import controller
+from tourny import controller
 
 
 def start_program():

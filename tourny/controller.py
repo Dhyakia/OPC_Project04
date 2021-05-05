@@ -1,5 +1,5 @@
-import model
-import view
+from tourny import model
+from tourny import view
 import datetime
 
 
@@ -10,6 +10,13 @@ class Controller:
         self.main()
 
     def main(self):
+        """
+        Program main loop.
+
+        Start by initializing data from the json's into variable,
+        then take user input to direct to designated method.
+        """
+
         flow = True
         while flow is True:
             start_logic = self.view.ask_main_menu()
@@ -34,6 +41,7 @@ class Controller:
                 flow = False
 
     def tournament_logic(self, user_input, players_list, tournaments_list, saved_game):
+        """ Main tournament logic loop."""
         if user_input.lower() == "r":
             self.view.show_user_loading(saved_game.name)
 
@@ -77,6 +85,7 @@ class Controller:
             return None
 
     def get_new_tournament_data(self):
+        """Takes user input. Return a Tournament object"""
         tournament_name = self.view.ask_tournament_name()
         tournament_location = self.view.ask_tournament_location()
 
