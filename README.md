@@ -4,7 +4,7 @@ Develop a program using Python : Chess tournaments manager
 
 # Introduction -  What's torga ?
 
-Torga is an offline program aimed at organising chess tournaments, following the Swiss rules. 
+This application is an offline program aimed at organising Chess's tournaments, following the Swiss rules. 
 It feature a very basic set of functionnality such as :
 * Customizing the number of rounds, duration, name ... of a tournament.
 * Possibility to save and load a tournament.
@@ -20,7 +20,7 @@ It feature a very basic set of functionnality such as :
 
 ## 1. Getting the code
 
-Using the git tool or straight from the source
+Using the git tool or straight from the source.
 
 ### Method git
 ```
@@ -34,7 +34,7 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 3. Un-zip the file and you're done !
 
 ## 2. Setting up a virtual environement
-1. With the console command, navigate to the instalation folder
+1. With the console command, navigate to the folder of instalation.
 2. To create the virtual environement, enter this command :
 
    Windows : ```python3 -m venv c:\path\to\venv```
@@ -61,15 +61,15 @@ Wait for all the modules to download and install.
 
 <b>WARNING :</b> Before starting the program, make sure your virtual environement is activated.
 
-In the console, navigate the installation folder :
+In the console, navigate the installation folder and enter :
 ```
-python -m 
+python -m tourny
 ```
 To save a tournament, type `save` when asked to enter a score. This will save the tournament for later.
 
 # Generate a new flake8-html
 
-To generate a new flake8 report, paste this line into your console :
+To generate a new flake8 report, navigate trought the console to the location of installation and enter :
 ```
 flake8 --config setup.cfg
 ```
