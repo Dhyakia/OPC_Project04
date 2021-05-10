@@ -308,10 +308,11 @@ class Match:
         match = [player1, player2]
         return match
 
-    def match_player_deserializer(self, matchs_list):
+    @classmethod
+    def match_player_deserializer(cls, matchs_list):
         """De-serialize a match, return a match object."""
         player1 = Player.database_to_tournaments_round_list_format(matchs_list[0])
         player2 = Player.database_to_tournaments_round_list_format(matchs_list[1])
 
-        match = self(player1, player2)
+        match = cls(player1, player2)
         return match
