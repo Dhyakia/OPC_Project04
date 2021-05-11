@@ -1,5 +1,5 @@
-from tourny import model
-from tourny import view
+import tourny.view.eyes as view
+import tourny.model as model
 import datetime
 
 

@@ -1,9 +1,9 @@
-from tourny import controller
+from tourny.controller import brain
 
 
 def start_program():
     """Start the program by running the controller initialisation."""
-    start = controller.Controller()
+    start = brain.Controller()
     return start
 
 
